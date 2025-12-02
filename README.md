@@ -71,13 +71,16 @@ jules-app/
 
 ## Jules API Integration
 
-This app integrates with the official Jules API with the following endpoints:
+This app integrates with the official Jules API (`https://julius.googleapis.com/v1alpha`) with the following endpoints:
 
 - **GET /sources** - List all connected GitHub repositories
 - **GET /sessions** - List all Jules sessions
 - **POST /sessions** - Create a new session
 - **GET /sessions/:id/activities** - Get activities for a session
-- **POST /sessions/:id/activities** - Send a message to a session
+- **POST /sessions/:id:sendMessage** - Send a message to a session
+- **POST /sessions/:id:approvePlan** - Approve a plan requiring authorization
+
+For full API documentation, visit [developers.google.com/jules/api](https://developers.google.com/jules/api)
 
 ## Tech Stack
 

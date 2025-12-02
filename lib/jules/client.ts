@@ -138,9 +138,10 @@ export class JulesClient {
   }
 
   async createActivity(data: CreateActivityRequest): Promise<Activity> {
-    return this.request<Activity>(`/sessions/${data.sessionId}/activities`, {
+    // Jules API uses :sendMessage endpoint for sending messages
+    return this.request<Activity>(`/sessions/${data.sessionId}:sendMessage`, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({ message: data.content }),
     });
   }
 }

@@ -37,8 +37,20 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
       setSessions(data);
     } catch (err) {
       console.error('Failed to load sessions:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load sessions';
-      setError(errorMessage);
+      // Provide helpful error messages
+      if (err instanceof Error) {
+        if (err.message.includes('Invalid API key')) {
+          setError('Invalid API key. Please check your API key and try again.');
+        } else if (err.message.includes('Resource not found')) {
+          // For 404, just show empty state instead of error
+          setSessions([]);
+          setError(null);
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError('Failed to load sessions');
+      }
       setSessions([]);
     } finally {
       setLoading(false);

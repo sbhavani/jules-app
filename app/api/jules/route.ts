@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 
-const JULES_API_BASE = 'https://jules.googleapis.com/v1';
+const JULES_API_BASE = 'https://julius.googleapis.com/v1alpha';
 
 export async function GET(request: NextRequest) {
   try {

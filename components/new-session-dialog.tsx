@@ -55,11 +55,18 @@ export function NewSessionDialog({ onSessionCreated }: NewSessionDialogProps) {
       setSources(data);
       if (data.length > 0) {
         setFormData((prev) => ({ ...prev, sourceId: data[0].id }));
+      } else if (data.length === 0) {
+        setError('No repositories found. Please connect a GitHub repository in the Jules web app first.');
       }
     } catch (err) {
       console.error('Failed to load sources:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load repositories';
-      setError(errorMessage);
+      // For 404 errors, show a helpful message
+      if (err instanceof Error && err.message.includes('Resource not found')) {
+        setError('Unable to load repositories. Please ensure you have connected at least one GitHub repository in the Jules web app.');
+      } else {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load repositories';
+        setError(errorMessage);
+      }
     }
   };
 
@@ -111,9 +118,10 @@ export function NewSessionDialog({ onSessionCreated }: NewSessionDialogProps) {
               onValueChange={(value) =>
                 setFormData((prev) => ({ ...prev, sourceId: value }))
               }
+              disabled={sources.length === 0}
             >
               <SelectTrigger id="source">
-                <SelectValue placeholder="Select a repository" />
+                <SelectValue placeholder={sources.length === 0 ? "No repositories available" : "Select a repository"} />
               </SelectTrigger>
               <SelectContent>
                 {sources.map((source) => (
@@ -123,6 +131,19 @@ export function NewSessionDialog({ onSessionCreated }: NewSessionDialogProps) {
                 ))}
               </SelectContent>
             </Select>
+            {sources.length === 0 && !error && (
+              <p className="text-xs text-muted-foreground">
+                Connect a repository at{' '}
+                <a
+                  href="https://jules.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline"
+                >
+                  jules.google.com
+                </a>
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
