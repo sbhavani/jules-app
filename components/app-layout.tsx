@@ -5,20 +5,23 @@ import { useJules } from '@/lib/jules/provider';
 import type { Session } from '@/types/jules';
 import { SessionList } from './session-list';
 import { ActivityFeed } from './activity-feed';
+import { AnalyticsDashboard } from './analytics-dashboard';
 import { NewSessionDialog } from './new-session-dialog';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Menu, LogOut, Settings } from 'lucide-react';
+import { Menu, LogOut, Settings, LayoutDashboard, MessageSquare } from 'lucide-react';
 
 export function AppLayout() {
   const { clearApiKey } = useJules();
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+  const [view, setView] = useState<'sessions' | 'analytics'>('sessions');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
   const handleSessionSelect = (session: Session) => {
     setSelectedSession(session);
+    setView('sessions');
     setMobileMenuOpen(false);
   };
 
@@ -58,6 +61,14 @@ export function AppLayout() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setView(view === 'analytics' ? 'sessions' : 'analytics')}
+              title={view === 'analytics' ? "Back to Sessions" : "Analytics Dashboard"}
+            >
+              {view === 'analytics' ? <MessageSquare className="h-5 w-5" /> : <LayoutDashboard className="h-5 w-5" />}
+            </Button>
             <NewSessionDialog onSessionCreated={handleSessionCreated} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -94,7 +105,9 @@ export function AppLayout() {
 
         {/* Main Panel */}
         <main className="flex-1 overflow-hidden">
-          {selectedSession ? (
+          {view === 'analytics' ? (
+            <AnalyticsDashboard />
+          ) : selectedSession ? (
             <ActivityFeed session={selectedSession} />
           ) : (
             <div className="flex h-full items-center justify-center p-8">
