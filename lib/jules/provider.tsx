@@ -10,7 +10,7 @@ interface JulesContextType {
   clearApiKey: () => void;
 }
 
-const JulesContext = createContext<JulesContextType | undefined>(undefined);
+export const JulesContext = createContext<JulesContextType | undefined>(undefined);
 
 export function JulesProvider({ children }: { children: ReactNode }) {
   const [apiKey, setApiKeyState] = useState<string | null>(null);

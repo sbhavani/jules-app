@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useJules } from '@/lib/jules/provider';
 import type { Session } from '@/types/jules';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
@@ -28,7 +28,14 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
     try {
       setLoading(true);
       const data = await client.listSessions();
-      setSessions(data);
+
+      const sortedData = [...data].sort((a, b) => {
+        const timeA = new Date(a.lastActivityAt || a.createdAt).getTime();
+        const timeB = new Date(b.lastActivityAt || b.createdAt).getTime();
+        return timeB - timeA;
+      });
+
+      setSessions(sortedData);
     } catch (error) {
       console.error('Failed to load sessions:', error);
     } finally {
@@ -83,7 +90,7 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
                 <div className="flex-1 min-w-0">
                   <CardTitle className="text-base truncate">{session.title}</CardTitle>
                   <CardDescription className="text-xs mt-1">
-                    {formatDistanceToNow(new Date(session.createdAt), { addSuffix: true })}
+                    {formatDistanceToNow(new Date(session.lastActivityAt || session.createdAt), { addSuffix: true })}
                   </CardDescription>
                 </div>
                 <Badge className={getStatusColor(session.status)}>
