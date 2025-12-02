@@ -154,7 +154,7 @@ export function ActivityFeed({ session }: ActivityFeedProps) {
               }
             }}
           />
-          <Button type="submit" size="icon" disabled={!message.trim() || sending}>
+          <Button type="submit" size="icon" disabled={!message.trim() || sending} className="h-11 w-11 md:h-9 md:w-9">
             <Send className="h-4 w-4" />
           </Button>
         </div>

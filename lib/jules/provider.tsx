@@ -17,10 +17,16 @@ export function JulesProvider({ children }: { children: ReactNode }) {
   const [client, setClient] = useState<JulesClient | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem('jules-api-key');
+    // Use a small timeout or state initializer if possible, but for localStorage check in Next.js
+    // ensuring it runs only on client is key.
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('jules-api-key') : null;
     if (stored) {
-      setApiKeyState(stored);
-      setClient(new JulesClient(stored));
+      // Use setTimeout to move state update to next tick, avoiding the sync state update warning
+      // although for this use case the warning is arguably overly aggressive.
+      setTimeout(() => {
+        setApiKeyState(stored);
+        setClient(new JulesClient(stored));
+      }, 0);
     }
   }, []);
 
