@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useJules } from '@/lib/jules/provider';
 import type { Activity, Session } from '@/types/jules';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,7 +23,6 @@ export function ActivityFeed({ session }: ActivityFeedProps) {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   const formatDate = (dateString: string) => {
     if (!dateString) return 'Unknown date';
@@ -37,13 +36,52 @@ export function ActivityFeed({ session }: ActivityFeedProps) {
     }
   };
 
+  const formatContent = (content: string) => {
+    // Try to parse as JSON and format nicely
+    try {
+      const parsed = JSON.parse(content);
+
+      // If it's an array (like plan steps), format as list
+      if (Array.isArray(parsed)) {
+        return (
+          <div className="space-y-2">
+            {parsed.map((item: any, index: number) => (
+              <div key={index} className="pl-4 border-l-2 border-muted">
+                {item.title && <div className="font-medium">{item.title}</div>}
+                {item.description && <div className="text-muted-foreground text-xs mt-1">{item.description}</div>}
+                {!item.title && !item.description && <div>{typeof item === 'string' ? item : JSON.stringify(item)}</div>}
+              </div>
+            ))}
+          </div>
+        );
+      }
+
+      // If it's an object with steps, format specially
+      if (parsed.steps && Array.isArray(parsed.steps)) {
+        return (
+          <div className="space-y-2">
+            {parsed.description && <div className="mb-3">{parsed.description}</div>}
+            {parsed.steps.map((step: any, index: number) => (
+              <div key={index} className="pl-4 border-l-2 border-muted">
+                <div className="font-medium">Step {index + 1}: {step.title || step}</div>
+                {step.description && <div className="text-muted-foreground text-xs mt-1">{step.description}</div>}
+              </div>
+            ))}
+          </div>
+        );
+      }
+
+      // Otherwise return formatted JSON
+      return <pre className="text-xs overflow-x-auto">{JSON.stringify(parsed, null, 2)}</pre>;
+    } catch {
+      // Not JSON, return as plain text
+      return <p className="text-sm whitespace-pre-wrap break-words">{content}</p>;
+    }
+  };
+
   useEffect(() => {
     loadActivities();
   }, [session.id, client]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [activities]);
 
   const loadActivities = async () => {
     if (!client) {
@@ -69,12 +107,6 @@ export function ActivityFeed({ session }: ActivityFeedProps) {
       }
     } finally {
       setLoading(false);
-    }
-  };
-
-  const scrollToBottom = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   };
 
@@ -152,43 +184,62 @@ export function ActivityFeed({ session }: ActivityFeedProps) {
         </div>
       )}
 
-      <ScrollArea ref={scrollRef} className="flex-1 p-4">
-        {activities.length === 0 && !loading && !error && (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-muted-foreground text-center">
-              No activities yet.
-              {session.status !== 'completed' && session.status !== 'failed' &&
-                <span className="block mt-1">This session may be queued or in progress.</span>
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="p-4 space-y-4">
+            {activities.length === 0 && !loading && !error && (
+              <div className="flex items-center justify-center min-h-[200px]">
+                <p className="text-muted-foreground text-center">
+                  No activities yet.
+                  {session.status !== 'completed' && session.status !== 'failed' &&
+                    <span className="block mt-1">This session may be queued or in progress.</span>
+                  }
+                </p>
+              </div>
+            )}
+            {activities.filter((activity) => {
+              // Filter out activities with empty or meaningless content
+              const content = activity.content?.trim();
+              if (!content) return false;
+              if (content === '{}') return false;
+              if (content === '[]') return false;
+              // Filter out fallback messages like [agentMessaged], [userMessaged], etc.
+              if (/^\[[\w,\s]+\]$/.test(content)) return false;
+              try {
+                const parsed = JSON.parse(content);
+                // Hide empty objects or arrays
+                if (typeof parsed === 'object' && Object.keys(parsed).length === 0) return false;
+                if (Array.isArray(parsed) && parsed.length === 0) return false;
+              } catch {
+                // Not JSON, keep it
               }
-            </p>
+              return true;
+            }).map((activity) => (
+              <div
+                key={activity.id}
+                className={`flex gap-3 ${activity.role === 'user' ? 'flex-row-reverse' : ''}`}
+              >
+                <Avatar className="h-8 w-8 shrink-0">
+                  {getActivityIcon(activity)}
+                </Avatar>
+                <Card className={`flex-1 ${activity.role === 'user' ? 'bg-primary/5' : ''}`}>
+                  <CardContent className="p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className={`text-xs ${getActivityTypeColor(activity.type)}`}>
+                        {activity.type}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground">
+                        {formatDate(activity.createdAt)}
+                      </span>
+                    </div>
+                    <div className="text-sm">{formatContent(activity.content)}</div>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
           </div>
-        )}
-        <div className="space-y-4">
-          {activities.map((activity) => (
-            <div
-              key={activity.id}
-              className={`flex gap-3 ${activity.role === 'user' ? 'flex-row-reverse' : ''}`}
-            >
-              <Avatar className="h-8 w-8 shrink-0">
-                {getActivityIcon(activity)}
-              </Avatar>
-              <Card className={`flex-1 ${activity.role === 'user' ? 'bg-primary/5' : ''}`}>
-                <CardContent className="p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className={`text-xs ${getActivityTypeColor(activity.type)}`}>
-                      {activity.type}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">
-                      {formatDate(activity.createdAt)}
-                    </span>
-                  </div>
-                  <p className="text-sm whitespace-pre-wrap">{activity.content}</p>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
+        </ScrollArea>
+      </div>
 
       <form onSubmit={handleSendMessage} className="border-t p-4">
         <div className="flex gap-2">

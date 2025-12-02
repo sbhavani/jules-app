@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Menu, LogOut, Settings, LayoutDashboard, MessageSquare } from 'lucide-react';
+import { ThemeToggle } from './theme-toggle';
 
 export function AppLayout() {
   const { clearApiKey } = useJules();
@@ -70,6 +71,7 @@ export function AppLayout() {
               {view === 'analytics' ? <MessageSquare className="h-5 w-5" /> : <LayoutDashboard className="h-5 w-5" />}
             </Button>
             <NewSessionDialog onSessionCreated={handleSessionCreated} />
+            <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">

@@ -21,6 +21,12 @@ export async function GET(request: NextRequest) {
     });
 
     const data = await response.json().catch(() => ({}));
+
+    // Temporarily log first activity for debugging
+    if (path.includes('/activities') && data.activities && data.activities.length > 0) {
+      console.log('[Jules API Proxy] Sample activity:', JSON.stringify(data.activities[0], null, 2));
+    }
+
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('[Jules API Proxy] Error:', error);

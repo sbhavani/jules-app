@@ -153,10 +153,64 @@ export class JulesClient {
 
   // Activities
   async listActivities(sessionId: string): Promise<Activity[]> {
-    const response = await this.request<{ activities: Activity[] }>(
+    const response = await this.request<{ activities: any[] }>(
       `/sessions/${sessionId}/activities`
     );
-    return response.activities || [];
+
+    // Transform API response to match our Activity type
+    return (response.activities || []).map((activity: any) => {
+      // Extract ID from name field (e.g., "sessions/ID/activities/ACTIVITY_ID")
+      const id = activity.name?.split('/').pop() || activity.id || '';
+
+      // Determine type and content based on activity structure
+      let type: Activity['type'] = 'message';
+      let content = '';
+
+      // Extract content from various possible fields
+      if (activity.planGenerated) {
+        type = 'plan';
+        const plan = activity.planGenerated.plan || activity.planGenerated;
+        content = plan.description || plan.summary || plan.title || JSON.stringify(plan.steps || plan, null, 2);
+      } else if (activity.progressUpdated) {
+        type = 'progress';
+        content = activity.progressUpdated.progressDescription ||
+                  activity.progressUpdated.description ||
+                  activity.progressUpdated.message ||
+                  JSON.stringify(activity.progressUpdated, null, 2);
+      } else if (activity.sessionCompleted) {
+        type = 'result';
+        const result = activity.sessionCompleted;
+        content = result.summary || result.message || 'Session completed';
+      } else if (activity.userMessage) {
+        type = 'message';
+        content = activity.userMessage.message || activity.userMessage.content || '';
+      }
+
+      // Fallback: try common content fields
+      if (!content) {
+        content = activity.message ||
+                  activity.content ||
+                  activity.text ||
+                  activity.description ||
+                  (activity.artifacts ? JSON.stringify(activity.artifacts, null, 2) : '') ||
+                  '';
+      }
+
+      // Last resort: show activity type
+      if (!content) {
+        content = `[${Object.keys(activity).filter(k => !['name', 'createTime', 'originator', 'id'].includes(k)).join(', ')}]`;
+      }
+
+      return {
+        id,
+        sessionId,
+        type,
+        role: (activity.originator === 'agent' ? 'agent' : 'user') as Activity['role'],
+        content,
+        createdAt: activity.createTime,
+        metadata: activity
+      };
+    });
   }
 
   async createActivity(data: CreateActivityRequest): Promise<Activity> {
