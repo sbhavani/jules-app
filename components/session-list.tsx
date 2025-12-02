@@ -105,7 +105,7 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
         {sessions.map((session) => (
           <Card
             key={session.id}
-            className={`cursor-pointer transition-colors hover:bg-accent ${
+            className={`cursor-pointer transition-colors hover:bg-accent min-h-[44px] ${
               selectedSessionId === session.id ? 'border-primary' : ''
             }`}
             onClick={() => onSelectSession(session)}

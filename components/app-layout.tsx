@@ -42,7 +42,7 @@ export function AppLayout() {
           <div className="flex items-center gap-4">
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden h-11 w-11">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
@@ -57,7 +57,7 @@ export function AppLayout() {
                 />
               </SheetContent>
             </Sheet>
-            <h1 className="text-xl font-bold">Jules Task Manager</h1>
+            <h1 className="text-xl font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] md:max-w-none">Jules Task Manager</h1>
           </div>
 
           <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export function AppLayout() {
             <NewSessionDialog onSessionCreated={handleSessionCreated} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="h-11 w-11 md:h-9 md:w-9">
                   <Settings className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
