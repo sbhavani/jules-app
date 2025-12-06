@@ -216,16 +216,39 @@ export class JulesClient {
         type = 'plan';
         const plan = activity.planGenerated.plan || activity.planGenerated;
         content = plan.description || plan.summary || plan.title || JSON.stringify(plan.steps || plan, null, 2);
+      } else if (activity.planApproved) {
+        type = 'plan';
+        content = 'Plan approved';
       } else if (activity.progressUpdated) {
         type = 'progress';
         content = activity.progressUpdated.progressDescription ||
                   activity.progressUpdated.description ||
                   activity.progressUpdated.message ||
                   JSON.stringify(activity.progressUpdated, null, 2);
+
+        // Extract diff from progress artifacts if available
+        if (activity.progressUpdated.artifacts?.length > 0) {
+          const artifact = activity.progressUpdated.artifacts[0];
+          if (artifact.changeSet?.gitPatch?.unidiffPatch) {
+            activity.diff = artifact.changeSet.gitPatch.unidiffPatch;
+          }
+        }
       } else if (activity.sessionCompleted) {
         type = 'result';
         const result = activity.sessionCompleted;
         content = result.summary || result.message || 'Session completed';
+
+        // Extract diff from artifacts if available
+        if (result.artifacts?.length > 0) {
+          const artifact = result.artifacts[0];
+          if (artifact.changeSet?.gitPatch?.unidiffPatch) {
+            // Store the diff in metadata for rendering
+            activity.diff = artifact.changeSet.gitPatch.unidiffPatch;
+          }
+        }
+      } else if (activity.agentMessaged) {
+        type = 'message';
+        content = activity.agentMessaged.agentMessage || activity.agentMessaged.message || '';
       } else if (activity.userMessage) {
         type = 'message';
         content = activity.userMessage.message || activity.userMessage.content || '';
@@ -252,6 +275,7 @@ export class JulesClient {
         type,
         role: (activity.originator === 'agent' ? 'agent' : 'user') as Activity['role'],
         content,
+        diff: activity.diff, // Include extracted diff if available
         createdAt: activity.createTime,
         metadata: activity
       };
@@ -270,16 +294,38 @@ export class JulesClient {
       type = 'plan';
       const plan = response.planGenerated.plan || response.planGenerated;
       content = plan.description || plan.summary || plan.title || JSON.stringify(plan.steps || plan, null, 2);
+    } else if (response.planApproved) {
+      type = 'plan';
+      content = 'Plan approved';
     } else if (response.progressUpdated) {
       type = 'progress';
       content = response.progressUpdated.progressDescription ||
                 response.progressUpdated.description ||
                 response.progressUpdated.message ||
                 JSON.stringify(response.progressUpdated, null, 2);
+
+      // Extract diff from progress artifacts if available
+      if (response.progressUpdated.artifacts?.length > 0) {
+        const artifact = response.progressUpdated.artifacts[0];
+        if (artifact.changeSet?.gitPatch?.unidiffPatch) {
+          response.diff = artifact.changeSet.gitPatch.unidiffPatch;
+        }
+      }
     } else if (response.sessionCompleted) {
       type = 'result';
       const result = response.sessionCompleted;
       content = result.summary || result.message || 'Session completed';
+
+      // Extract diff from artifacts if available
+      if (result.artifacts?.length > 0) {
+        const artifact = result.artifacts[0];
+        if (artifact.changeSet?.gitPatch?.unidiffPatch) {
+          response.diff = artifact.changeSet.gitPatch.unidiffPatch;
+        }
+      }
+    } else if (response.agentMessaged) {
+      type = 'message';
+      content = response.agentMessaged.agentMessage || response.agentMessaged.message || '';
     } else if (response.userMessage) {
       type = 'message';
       content = response.userMessage.message || response.userMessage.content || '';
@@ -295,6 +341,7 @@ export class JulesClient {
       type,
       role: (response.originator === 'agent' ? 'agent' : 'user') as Activity['role'],
       content,
+      diff: response.diff,
       createdAt: response.createTime,
       metadata: response
     };

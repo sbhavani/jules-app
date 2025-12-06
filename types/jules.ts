@@ -21,6 +21,7 @@ export interface Activity {
   type: 'message' | 'plan' | 'progress' | 'result' | 'error';
   role: 'user' | 'agent';
   content: string;
+  diff?: string; // Unified diff patch from artifacts
   metadata?: Record<string, unknown>;
   createdAt: string;
 }

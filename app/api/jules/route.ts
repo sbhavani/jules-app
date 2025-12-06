@@ -22,9 +22,23 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json().catch(() => ({}));
 
-    // Temporarily log first activity for debugging
+    // Temporarily log activities for debugging
     if (path.includes('/activities') && data.activities && data.activities.length > 0) {
-      console.log('[Jules API Proxy] Sample activity:', JSON.stringify(data.activities[0], null, 2));
+      // Log activity types
+      const activityTypes = data.activities.map((a: any) => {
+        const type = Object.keys(a).find(k => k !== 'name' && k !== 'createTime' && k !== 'originator' && k !== 'id');
+        return type;
+      });
+      console.log('[Jules API Proxy] Activity types:', activityTypes);
+
+      // Look for sessionCompleted activities
+      const completedActivity = data.activities.find((a: any) => a.sessionCompleted);
+      if (completedActivity) {
+        console.log('[Jules API Proxy] Found sessionCompleted activity:', JSON.stringify(completedActivity, null, 2));
+      }
+
+      // Log first activity for reference
+      console.log('[Jules API Proxy] First activity:', JSON.stringify(data.activities[0], null, 2));
     }
 
     return NextResponse.json(data, { status: response.status });

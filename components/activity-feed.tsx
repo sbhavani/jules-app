@@ -14,6 +14,7 @@ import { Send, Archive } from 'lucide-react';
 import { archiveSession, isSessionArchived } from '@/lib/archive';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { DiffViewer } from '@/components/ui/diff-viewer';
 
 interface ActivityFeedProps {
   session: Session;
@@ -520,6 +521,11 @@ export function ActivityFeed({ session, onArchive }: ActivityFeedProps) {
                           </span>
                         </div>
                         <div className="text-[11px] leading-relaxed text-white/90">{formatContent(activity.content)}</div>
+                        {activity.diff && (
+                          <div className="mt-3">
+                            <DiffViewer diff={activity.diff} />
+                          </div>
+                        )}
                         {activity.type === 'plan' &&
                           activity.metadata?.planGenerated &&
                           !(activity.metadata?.planGenerated as any)?.approved ? (
