@@ -19,18 +19,41 @@ interface ApiSession {
   [key: string]: unknown;
 }
 
+interface Plan {
+  description?: string;
+  summary?: string;
+  title?: string;
+  steps?: unknown[];
+  [key: string]: unknown;
+}
+
+interface Artifact {
+  changeSet?: {
+    gitPatch?: {
+      unidiffPatch?: string;
+    };
+    unidiffPatch?: string;
+    [key: string]: unknown;
+  };
+  bashOutput?: {
+    output?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
 interface ApiActivity {
   name?: string;
   id?: string;
   createTime: string;
   originator?: string;
-  planGenerated?: { plan?: unknown; [key: string]: unknown };
+  planGenerated?: { plan?: Plan; description?: string; summary?: string; title?: string; steps?: unknown[]; [key: string]: unknown };
   planApproved?: boolean;
-  progressUpdated?: { progressDescription?: string; description?: string; message?: string; [key: string]: unknown };
-  sessionCompleted?: { summary?: string; message?: string; [key: string]: unknown };
+  progressUpdated?: { progressDescription?: string; description?: string; message?: string; artifacts?: Artifact[]; [key: string]: unknown };
+  sessionCompleted?: { summary?: string; message?: string; artifacts?: Artifact[]; [key: string]: unknown };
   agentMessaged?: { agentMessage?: string; message?: string; [key: string]: unknown };
   userMessage?: { message?: string; content?: string; [key: string]: unknown };
-  artifacts?: unknown[];
+  artifacts?: Artifact[];
   message?: string;
   content?: string;
   text?: string;
