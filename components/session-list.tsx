@@ -167,7 +167,7 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
                     <div className="flex items-center gap-2 mb-0.5 w-full min-w-0">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="text-[10px] font-bold leading-tight text-white uppercase tracking-wide flex-1 min-w-0 block overflow-hidden text-ellipsis custom-multiline-truncate">
+                          <div className="text-[10px] font-bold leading-tight text-white uppercase tracking-wide truncate flex-1 min-w-0 block">
                             {session.title || 'Untitled'}
                           </div>
                         </TooltipTrigger>
