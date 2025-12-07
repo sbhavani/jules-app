@@ -150,16 +150,24 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
                   selectedSessionId === session.id ? 'border-purple-500/30' : ''
                 }`}
               >
-                <button
-                  className="w-full flex items-start gap-2.5 px-3 py-2.5 text-left relative z-10"
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="w-full flex items-start gap-2.5 px-3 py-2.5 text-left relative z-10 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-purple-500/50"
                   onClick={() => onSelectSession(session)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onSelectSession(session);
+                    }
+                  }}
                 >
                   <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full ${getStatusColor(session.status)}`} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5 w-full">
+                    <div className="flex items-center gap-2 mb-0.5 w-full min-w-0">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="text-[11px] font-bold leading-tight text-white uppercase tracking-wide truncate flex-1 min-w-0 text-left">
+                          <div className="text-[11px] font-bold leading-tight text-white uppercase tracking-wide truncate flex-1 min-w-0 block">
                             {session.title || 'Untitled'}
                           </div>
                         </TooltipTrigger>
@@ -177,7 +185,7 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
                       {formatDate(session.createdAt)}
                     </div>
                   </div>
-                </button>
+                </div>
               </CardSpotlight>
             ))}
           </div>
