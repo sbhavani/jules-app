@@ -156,10 +156,10 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
                 >
                   <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full ${getStatusColor(session.status)}`} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                    <div className="flex items-center gap-2 mb-0.5 w-full">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="text-[11px] font-bold leading-tight text-white uppercase tracking-wide truncate flex-1 min-w-0">
+                          <div className="text-[11px] font-bold leading-tight text-white uppercase tracking-wide truncate flex-1 min-w-0 text-left">
                             {session.title || 'Untitled'}
                           </div>
                         </TooltipTrigger>
@@ -168,7 +168,7 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
                         </TooltipContent>
                       </Tooltip>
                       {session.sourceId && (
-                        <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 min-h-0 font-mono bg-white/5 border-white/10 text-white/60 uppercase tracking-wider hover:bg-white/10 rounded-sm">
+                        <Badge className="shrink-0 text-[9px] px-1.5 py-0 h-4 font-mono bg-white/10 text-white/70 hover:bg-white/20 border-0 rounded-sm uppercase tracking-wider">
                           {getRepoShortName(session.sourceId)}
                         </Badge>
                       )}
