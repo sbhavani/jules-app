@@ -1,5 +1,7 @@
 # Jules UI
 
+![Build Status](https://github.com/sbhavani/jules-app/actions/workflows/ci.yml/badge.svg)
+
 Jules UI is a feature-rich, self-hosted workspace designed to elevate the experience of working with **Google's Jules AI agent**.
 
 It transforms standard agent interactions into a powerful engineering platform, offering real-time visibility into code generation with live diffs, granular inspection of terminal command outputs, and comprehensive session analytics. Engineered for performance and clarity, it serves as a robust command center for managing complex AI-driven development tasks, featuring:
