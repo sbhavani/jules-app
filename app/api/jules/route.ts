@@ -31,16 +31,35 @@ export async function GET(request: NextRequest) {
       });
       console.log('[Jules API Proxy] Activity types:', activityTypes);
 
-      // Look for activities with artifacts
+      // Look for activities with artifacts (artifacts are at top level of activity object)
       const activitiesWithArtifacts = data.activities.filter((a: any) => {
-        return (a.progressUpdated?.artifacts?.length > 0) || (a.sessionCompleted?.artifacts?.length > 0);
+        return a.artifacts?.length > 0;
       });
 
       if (activitiesWithArtifacts.length > 0) {
         console.log('[Jules API Proxy] Found', activitiesWithArtifacts.length, 'activities with artifacts');
         activitiesWithArtifacts.forEach((a: any, idx: number) => {
-          const artifacts = a.progressUpdated?.artifacts || a.sessionCompleted?.artifacts || [];
-          console.log(`[Jules API Proxy] Activity ${idx} artifacts:`, JSON.stringify(artifacts, null, 2));
+          const artifacts = a.artifacts || [];
+          console.log(`[Jules API Proxy] Activity ${idx} has ${artifacts.length} artifacts`);
+          artifacts.forEach((artifact: any, artifactIdx: number) => {
+            console.log(`[Jules API Proxy]   Artifact ${artifactIdx}:`, Object.keys(artifact));
+            if (artifact.changeSet) {
+              console.log(`[Jules API Proxy]     Has changeSet with keys:`, Object.keys(artifact.changeSet));
+              // Check both possible formats
+              const hasGitPatch = !!artifact.changeSet.gitPatch?.unidiffPatch;
+              const hasDirectPatch = !!artifact.changeSet.unidiffPatch;
+              console.log(`[Jules API Proxy]     Has gitPatch.unidiffPatch:`, hasGitPatch);
+              console.log(`[Jules API Proxy]     Has direct unidiffPatch:`, hasDirectPatch);
+
+              const patch = artifact.changeSet.gitPatch?.unidiffPatch || artifact.changeSet.unidiffPatch;
+              if (patch) {
+                console.log(`[Jules API Proxy]     Patch length: ${patch.length} chars`);
+              }
+            }
+            if (artifact.bashOutput) {
+              console.log(`[Jules API Proxy]     Has bashOutput:`, !!artifact.bashOutput.output);
+            }
+          });
         });
       } else {
         console.log('[Jules API Proxy] No activities with artifacts found');
