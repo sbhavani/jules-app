@@ -10,6 +10,9 @@ interface ApiSession {
   id: string;
   sourceContext?: {
     source?: string;
+    githubRepoContext?: {
+      startingBranch?: string;
+    };
   };
   title?: string;
   state?: string;
@@ -204,7 +207,8 @@ export class JulesClient {
       status: this.mapState(session.state || ''),
       createdAt: session.createTime,
       updatedAt: session.updateTime,
-      lastActivityAt: session.lastActivityAt
+      lastActivityAt: session.lastActivityAt,
+      branch: session.sourceContext?.githubRepoContext?.startingBranch || 'main'
     }));
   }
 
@@ -231,7 +235,7 @@ export class JulesClient {
       sourceContext: {
         source: data.sourceId,
         githubRepoContext: {
-          startingBranch: 'main' // Default to main branch
+          startingBranch: data.startingBranch || 'main' // Default to main branch
         }
       },
       title: data.title || 'Untitled Session',

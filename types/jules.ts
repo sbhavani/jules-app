@@ -13,6 +13,7 @@ export interface Session {
   createdAt: string;
   updatedAt: string;
   lastActivityAt?: string;
+  branch?: string;
 }
 
 export interface Activity {
@@ -31,6 +32,7 @@ export interface CreateSessionRequest {
   sourceId: string;
   prompt: string;
   title?: string;
+  startingBranch?: string;
 }
 
 export interface CreateActivityRequest {

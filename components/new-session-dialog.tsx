@@ -32,6 +32,7 @@ export function NewSessionDialog({ onSessionCreated }: NewSessionDialogProps) {
     sourceId: '',
     title: '',
     prompt: '',
+    startingBranch: '',
   });
 
   const loadSources = useCallback(async () => {
@@ -75,9 +76,10 @@ export function NewSessionDialog({ onSessionCreated }: NewSessionDialogProps) {
         sourceId: formData.sourceId,
         prompt: formData.prompt,
         title: formData.title || undefined,
+        startingBranch: formData.startingBranch || undefined,
       });
       setOpen(false);
-      setFormData({ sourceId: '', title: '', prompt: '' });
+      setFormData({ sourceId: '', title: '', prompt: '', startingBranch: '' });
       setError(null);
       onSessionCreated?.();
     } catch (err) {
@@ -134,6 +136,19 @@ export function NewSessionDialog({ onSessionCreated }: NewSessionDialogProps) {
                 </a>
               </p>
             )}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="branch" className="text-xs font-semibold">Branch Name (Optional)</Label>
+            <Input
+              id="branch"
+              placeholder="main"
+              value={formData.startingBranch}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, startingBranch: e.target.value }))
+              }
+              className="h-9 text-xs"
+            />
           </div>
 
           <div className="space-y-1.5">
