@@ -179,7 +179,7 @@ export function AppLayout() {
         {/* Code Diff Sidebar */}
         {selectedSession && showCodeDiffs && (
           <aside className={`hidden md:flex border-l border-white/[0.08] flex-col bg-zinc-950 transition-all duration-200 ${
-            codeDiffSidebarCollapsed ? 'md:w-12' : 'md:w-[600px]'
+            codeDiffSidebarCollapsed ? 'md:w-12' : 'md:w-[800px]'
           }`}>
             <div className="px-3 py-2 border-b border-white/[0.08] flex items-center justify-between">
               {!codeDiffSidebarCollapsed && (
