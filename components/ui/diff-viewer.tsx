@@ -187,7 +187,7 @@ function FileDiff({ file }: { file: ParsedDiffFile }) {
             className="overflow-hidden"
           >
             <div className="overflow-x-auto pb-1">
-              <pre className="text-xs font-mono leading-relaxed m-0 min-w-max min-w-full">
+              <pre className="text-xs font-mono leading-relaxed m-0 w-full">
                 {file.lines.map((line, idx) => (
                   <div
                     key={idx}
@@ -206,7 +206,7 @@ function FileDiff({ file }: { file: ParsedDiffFile }) {
                     {/* Content */}
                     <div
                       className={cn(
-                        'px-4 grow shrink-0 whitespace-pre',
+                        'px-4 flex-1 min-w-0 whitespace-pre-wrap break-all',
                         line.type === 'add' && 'text-green-400',
                         line.type === 'remove' && 'text-red-400',
                         line.type === 'context' && 'text-white/60',
