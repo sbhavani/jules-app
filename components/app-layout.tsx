@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useJules } from '@/lib/jules/provider';
 import type { Session, Activity } from '@/types/jules';
 import { SessionList } from './session-list';
@@ -24,6 +24,37 @@ export function AppLayout() {
   const [codeDiffSidebarCollapsed, setCodeDiffSidebarCollapsed] = useState(false);
   const [showCodeDiffs, setShowCodeDiffs] = useState(false);
   const [currentActivities, setCurrentActivities] = useState<Activity[]>([]);
+  const [codeSidebarWidth, setCodeSidebarWidth] = useState(600);
+  const [isResizing, setIsResizing] = useState(false);
+
+  const startResizing = useCallback(() => {
+    setIsResizing(true);
+  }, []);
+
+  const stopResizing = useCallback(() => {
+    setIsResizing(false);
+  }, []);
+
+  const resize = useCallback(
+    (mouseMoveEvent: MouseEvent) => {
+      if (isResizing) {
+        const newWidth = window.innerWidth - mouseMoveEvent.clientX;
+        if (newWidth > 300 && newWidth < 1200) {
+          setCodeSidebarWidth(newWidth);
+        }
+      }
+    },
+    [isResizing]
+  );
+
+  useEffect(() => {
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResizing);
+    return () => {
+      window.removeEventListener('mousemove', resize);
+      window.removeEventListener('mouseup', stopResizing);
+    };
+  }, [resize, stopResizing]);
 
   const handleSessionSelect = (session: Session) => {
     setSelectedSession(session);
@@ -178,32 +209,43 @@ export function AppLayout() {
 
         {/* Code Diff Sidebar */}
         {selectedSession && showCodeDiffs && (
-          <aside className={`hidden md:flex border-l border-white/[0.08] flex-col bg-zinc-950 transition-all duration-200 ${
-            codeDiffSidebarCollapsed ? 'md:w-12' : 'md:w-[600px]'
-          }`}>
-            <div className="px-3 py-2 border-b border-white/[0.08] flex items-center justify-between">
-              {!codeDiffSidebarCollapsed && (
-                <h2 className="text-[10px] font-bold text-white/40 uppercase tracking-widest">CODE CHANGES</h2>
-              )}
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`h-6 w-6 hover:bg-white/5 text-white/60 ${codeDiffSidebarCollapsed ? 'mx-auto' : ''}`}
-                onClick={() => setCodeDiffSidebarCollapsed(!codeDiffSidebarCollapsed)}
-              >
-                {codeDiffSidebarCollapsed ? (
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                ) : (
-                  <ChevronRight className="h-3.5 w-3.5" />
+          <>
+            {!codeDiffSidebarCollapsed && (
+              <div
+                className="w-1 cursor-col-resize bg-transparent hover:bg-blue-500/50 transition-colors z-50"
+                onMouseDown={startResizing}
+              />
+            )}
+            <aside
+              className={`hidden md:flex border-l border-white/[0.08] flex-col bg-zinc-950 ${
+                isResizing ? 'transition-none' : 'transition-all duration-200'
+              } ${codeDiffSidebarCollapsed ? 'md:w-12' : ''}`}
+              style={{ width: codeDiffSidebarCollapsed ? undefined : codeSidebarWidth }}
+            >
+              <div className="px-3 py-2 border-b border-white/[0.08] flex items-center justify-between">
+                {!codeDiffSidebarCollapsed && (
+                  <h2 className="text-[10px] font-bold text-white/40 uppercase tracking-widest">CODE CHANGES</h2>
                 )}
-              </Button>
-            </div>
-            <div className="flex-1 overflow-hidden">
-              {!codeDiffSidebarCollapsed && (
-                <CodeDiffSidebar activities={currentActivities} />
-              )}
-            </div>
-          </aside>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`h-6 w-6 hover:bg-white/5 text-white/60 ${codeDiffSidebarCollapsed ? 'mx-auto' : ''}`}
+                  onClick={() => setCodeDiffSidebarCollapsed(!codeDiffSidebarCollapsed)}
+                >
+                  {codeDiffSidebarCollapsed ? (
+                    <ChevronLeft className="h-3.5 w-3.5" />
+                  ) : (
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  )}
+                </Button>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                {!codeDiffSidebarCollapsed && (
+                  <CodeDiffSidebar activities={currentActivities} />
+                )}
+              </div>
+            </aside>
+          </>
         )}
       </div>
     </div>
