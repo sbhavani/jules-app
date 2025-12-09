@@ -86,9 +86,13 @@ function FileDiff({ file }: { file: ParsedDiffFile }) {
 
   const handleCopy = async () => {
     const diffText = file.lines.map(line => line.content).join('\n');
-    await navigator.clipboard.writeText(diffText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(diffText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } else {
+      console.warn('Clipboard API not available');
+    }
   };
 
   const addedCount = file.lines.filter(l => l.type === 'add').length;
