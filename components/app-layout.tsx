@@ -8,7 +8,6 @@ import { ActivityFeed } from './activity-feed';
 import { CodeDiffSidebar } from './code-diff-sidebar';
 import { AnalyticsDashboard } from './analytics-dashboard';
 import { NewSessionDialog } from './new-session-dialog';
-import { QuickReviewButton } from './quick-review-button';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -200,8 +199,7 @@ export function AppLayout() {
                 <p className="text-[11px] text-white/30 leading-relaxed uppercase tracking-wide font-mono">
                   Select session or create new
                 </p>
-                <div className="pt-2 flex gap-2 justify-center">
-                  <QuickReviewButton onSessionCreated={handleSessionCreated} />
+                <div className="pt-2">
                   <NewSessionDialog onSessionCreated={handleSessionCreated} />
                 </div>
               </div>

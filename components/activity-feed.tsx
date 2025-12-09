@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow, isValid, parseISO } from 'date-fns';
-import { Send, Archive, Code, Terminal, ChevronDown, ChevronRight } from 'lucide-react';
+import { Send, Archive, Code, Terminal, ChevronDown, ChevronRight, Play } from 'lucide-react';
 import { archiveSession } from '@/lib/archive';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -199,6 +199,41 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
       setError(errorMessage);
     } finally {
       setApprovingPlan(false);
+    }
+  };
+
+  const handleQuickReview = async () => {
+    if (!client || sending) return;
+
+    const reviewPrompt = 'Please perform a comprehensive code review of the repository. Look for bugs, security issues, and opportunities for refactoring. Provide a detailed summary of your findings.';
+
+    try {
+      setSending(true);
+      setError(null);
+
+      // Send message
+      const userMessage = await client.createActivity({
+        sessionId: session.id,
+        content: reviewPrompt,
+      });
+
+      // Add user message to activities immediately
+      setActivities([...activities, userMessage]);
+
+      // Poll for agent's response after a short delay
+      setTimeout(async () => {
+        try {
+          await loadActivities(false);
+        } catch (err) {
+          console.error('Failed to load new activities:', err);
+        }
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to start review:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to start review';
+      setError(errorMessage);
+    } finally {
+      setSending(false);
     }
   };
 
@@ -420,6 +455,18 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
             )}
           </div>
           <div className="flex items-center gap-1 shrink-0">
+            {session.status === 'active' && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleQuickReview}
+                title="Start Code Review"
+                className="h-7 w-7 hover:bg-white/5 text-white/60 hover:text-purple-400"
+                disabled={sending}
+              >
+                <Play className="h-3.5 w-3.5" />
+              </Button>
+            )}
             {hasDiffs && (
               <Button
                 variant="ghost"
