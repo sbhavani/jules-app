@@ -527,67 +527,34 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-zinc-950 border-white/10 text-white/80">
-                {session.status === 'active' && (
-                  <>
-                    <DropdownMenuItem onClick={handleQuickReview} disabled={sending} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
-                      <Play className="mr-2 h-3.5 w-3.5" />
-                      <span>Start Code Review</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handlePublishBranch} disabled={sending} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
-                      <CloudUpload className="mr-2 h-3.5 w-3.5" />
-                      <span>Publish Branch</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleCreatePR} disabled={sending} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
-                      <GitPullRequest className="mr-2 h-3.5 w-3.5" />
-                      <span>Create PR</span>
-                    </DropdownMenuItem>
-                  </>
-                )}
+                <DropdownMenuItem onClick={handleQuickReview} disabled={sending} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
+                  <Play className="mr-2 h-3.5 w-3.5" />
+                  <span>Start Code Review</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handlePublishBranch} disabled={sending} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
+                  <CloudUpload className="mr-2 h-3.5 w-3.5" />
+                  <span>Publish Branch</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleCreatePR} disabled={sending} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
+                  <GitPullRequest className="mr-2 h-3.5 w-3.5" />
+                  <span>Create PR</span>
+                </DropdownMenuItem>
+                
                 {session.status === 'completed' && hasDiffs && (
-                  <>
-                    <NewSessionDialog
-                      trigger={
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
-                          <CloudUpload className="mr-2 h-3.5 w-3.5" />
-                          <span>Publish Branch</span>
-                        </DropdownMenuItem>
-                      }
-                      initialValues={{
-                        sourceId: session.sourceId ? `sources/github/${session.sourceId}` : undefined,
-                        title: outputBranch ? `Publish: ${outputBranch}` : 'Publish Branch',
-                        prompt: 'Please push the current branch to the remote repository.',
-                        startingBranch: outputBranch || undefined
-                      }}
-                    />
-                    <NewSessionDialog
-                      trigger={
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
-                          <GitPullRequest className="mr-2 h-3.5 w-3.5" />
-                          <span>Create PR</span>
-                        </DropdownMenuItem>
-                      }
-                      initialValues={{
-                        sourceId: session.sourceId ? `sources/github/${session.sourceId}` : undefined,
-                        title: outputBranch ? `PR: ${outputBranch}` : 'Create PR',
-                        prompt: 'Please create a pull request for the current branch.',
-                        startingBranch: outputBranch || undefined
-                      }}
-                    />
-                    <NewSessionDialog
-                      trigger={
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
-                          <Play className="mr-2 h-3.5 w-3.5" />
-                          <span>Review & Create PR</span>
-                        </DropdownMenuItem>
-                      }
-                      initialValues={{
-                        sourceId: session.sourceId ? `sources/github/${session.sourceId}` : undefined,
-                        title: outputBranch ? `Review: ${outputBranch}` : 'PR Review',
-                        prompt: 'Review the changes in this branch. Verify they meet the requirements, check for bugs, and draft a Pull Request description.',
-                        startingBranch: outputBranch || undefined
-                      }}
-                    />
-                  </>
+                  <NewSessionDialog
+                    trigger={
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer">
+                        <Play className="mr-2 h-3.5 w-3.5" />
+                        <span>Review & Create PR</span>
+                      </DropdownMenuItem>
+                    }
+                    initialValues={{
+                      sourceId: session.sourceId ? `sources/github/${session.sourceId}` : undefined,
+                      title: outputBranch ? `Review: ${outputBranch}` : 'PR Review',
+                      prompt: 'Review the changes in this branch. Verify they meet the requirements, check for bugs, and draft a Pull Request description.',
+                      startingBranch: outputBranch || undefined
+                    }}
+                  />
                 )}
                 <DropdownMenuItem onClick={handleArchive} className="focus:bg-white/10 focus:text-white text-xs cursor-pointer text-red-400 focus:text-red-400">
                   <Archive className="mr-2 h-3.5 w-3.5" />
@@ -790,7 +757,7 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
         </ScrollArea>
       </div>
 
-      {session.status !== 'completed' && session.status !== 'failed' && (
+      {session.status !== 'failed' && (
         <form onSubmit={handleSendMessage} className="border-t border-white/[0.08] bg-zinc-950/95 p-3">
           <div className="flex gap-2">
             <Textarea
@@ -812,7 +779,7 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
           </div>
         </form>
       )}
-      {(session.status === 'completed' || session.status === 'failed') && (
+      {session.status === 'failed' && (
         <div className="border-t border-white/[0.08] bg-zinc-950/95 p-3 text-center">
           <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
             Session {session.status} • Cannot send new messages
