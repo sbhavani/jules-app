@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3002:3000"
     environment:
       - NODE_ENV=development
       - NEXT_PUBLIC_TERMINAL_WS_URL=ws://localhost:8080
@@ -29,7 +29,7 @@ services:
       - "8080:8080"
     environment:
       - NODE_ENV=development
-      - ALLOWED_ORIGINS=http://localhost:3000
+      - ALLOWED_ORIGINS=http://localhost:3002
     volumes:
       # Mount user's repository into container
       - ${REPO_PATH:-./workspace}:/workspace:rw

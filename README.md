@@ -60,7 +60,9 @@ echo "REPO_PATH=/path/to/your/repo" > .env.local
 docker-compose up
 ```
 
-Open [http://localhost:3000](http://localhost:3000) - the Terminal will connect automatically.
+Open [http://localhost:3002](http://localhost:3002) - the Terminal will connect automatically.
+
+**Note:** Uses port 3002 to avoid conflicts with other services (like Dokploy on 3000).
 
 ### Option 3: Run Services Independently
 
