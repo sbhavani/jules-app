@@ -57,6 +57,9 @@ cd jules-ui
 cp deploy/.env.local.example .env.local
 # Edit .env.local and set REPO_PATH=/path/to/your/repo
 
+# (Optional) Configure custom base image for terminal
+# export TERMINAL_BASE_IMAGE=ubuntu:22.04
+
 # Start all services (frontend + terminal server)
 docker-compose -f deploy/docker-compose.yml up
 ```
@@ -97,6 +100,8 @@ Open [http://localhost:3000](http://localhost:3000) - the Terminal will connect 
 **Frontend:** [Next.js 16](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/), [xterm.js](https://xtermjs.org/)
 
 **Terminal Server:** [Node.js](https://nodejs.org/), [Socket.io](https://socket.io/), [node-pty](https://github.com/microsoft/node-pty)
+  - **Base Image:** `nvcr.io/nvidia/pytorch:25.11-py3` (Configurable)
+  - **Pre-installed Tools:** `gemini-cli`, `python3`, `git`, `bash`
 
 **Infrastructure:** [Docker](https://www.docker.com/), [Docker Compose](https://docs.docker.com/compose/)
 

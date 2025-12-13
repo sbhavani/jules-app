@@ -152,6 +152,22 @@ environment:
   # ALLOWED_ORIGINS defaults to allow-all in development
 ```
 
+### Custom Base Image
+
+The terminal server uses `nvcr.io/nvidia/pytorch:25.11-py3` by default. To use a different image (e.g., standard Ubuntu or a custom ML image):
+
+1. Set the environment variable:
+   ```bash
+   export TERMINAL_BASE_IMAGE=ubuntu:22.04
+   ```
+
+2. Rebuild the container:
+   ```bash
+   docker-compose -f deploy/docker-compose.yml up -d --build
+   ```
+
+**Note:** Your custom image must use `apt-get` (Debian/Ubuntu based) to be compatible with the current Dockerfile installation steps. If you use Alpine, you'll need to modify `terminal-server/Dockerfile`.
+
 ### Docker Compose Configuration
 
 #### Mount Custom Repository

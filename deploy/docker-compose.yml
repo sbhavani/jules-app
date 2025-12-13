@@ -24,6 +24,8 @@ services:
     build:
       context: ../terminal-server
       dockerfile: Dockerfile
+      args:
+        - BASE_IMAGE=${TERMINAL_BASE_IMAGE:-nvcr.io/nvidia/pytorch:25.11-py3}
     ports:
       - "8080:8080"
     environment:

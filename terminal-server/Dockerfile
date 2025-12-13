@@ -1,4 +1,5 @@
-FROM nvcr.io/nvidia/pytorch:25.11-py3
+ARG BASE_IMAGE=nvcr.io/nvidia/pytorch:25.11-py3
+FROM ${BASE_IMAGE}
 
 # Install Node.js 20 and common tools
 # The base image is Ubuntu-based, so we use apt-get
