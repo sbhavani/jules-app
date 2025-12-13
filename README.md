@@ -55,6 +55,9 @@ Open [http://localhost:3000](http://localhost:3000) and enter your Jules API key
 
 ## 📸 More Screenshots
 
+![Integrated Terminal](public/assets/jules-terminal.png)
+*Integrated Terminal - Full web-based terminal with real-time command execution and output*
+
 ![Dashboard View](public/assets/dashboard-screenshot.png)
 *Analytics Dashboard - Track session success rates, duration, and activity volume*
 
