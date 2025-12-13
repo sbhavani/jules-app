@@ -11,7 +11,8 @@ import { NewSessionDialog } from './new-session-dialog';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Menu, LogOut, Settings, BarChart3, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, LogOut, Settings, BarChart3, MessageSquare, ChevronLeft, ChevronRight, Terminal as TerminalIcon } from 'lucide-react';
+import { TerminalPanel } from './terminal-panel';
 
 
 export function AppLayout() {
@@ -26,6 +27,12 @@ export function AppLayout() {
   const [currentActivities, setCurrentActivities] = useState<Activity[]>([]);
   const [codeSidebarWidth, setCodeSidebarWidth] = useState(600);
   const [isResizing, setIsResizing] = useState(false);
+  const [terminalOpen, setTerminalOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('terminal-open') === 'true';
+    }
+    return false;
+  });
 
   const startResizing = useCallback(() => {
     setIsResizing(true);
@@ -77,6 +84,14 @@ export function AppLayout() {
     setSelectedSession(null);
   };
 
+  const handleToggleTerminal = useCallback(() => {
+    setTerminalOpen((prev) => {
+      const newValue = !prev;
+      localStorage.setItem('terminal-open', String(newValue));
+      return newValue;
+    });
+  }, []);
+
   return (
     <div className="flex h-screen flex-col bg-black">
       {/* Header */}
@@ -123,6 +138,18 @@ export function AppLayout() {
               >
                 <BarChart3 className="h-3.5 w-3.5 mr-1.5" />
                 <span className="text-[10px] font-mono uppercase tracking-wider">Analytics</span>
+              </Button>
+            )}
+            {selectedSession && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`h-8 px-3 hover:bg-white/5 ${terminalOpen ? 'text-green-500' : 'text-white/80'}`}
+                onClick={handleToggleTerminal}
+                title="Toggle Terminal (Ctrl+`)"
+              >
+                <TerminalIcon className="h-3.5 w-3.5 mr-1.5" />
+                <span className="text-[10px] font-mono uppercase tracking-wider">Terminal</span>
               </Button>
             )}
             <NewSessionDialog onSessionCreated={handleSessionCreated} />
@@ -251,6 +278,16 @@ export function AppLayout() {
           </>
         )}
       </div>
+
+      {/* Terminal Panel */}
+      {selectedSession && (
+        <TerminalPanel
+          sessionId={selectedSession.id}
+          repositoryPath={selectedSession.sourceId}
+          isOpen={terminalOpen}
+          onToggle={handleToggleTerminal}
+        />
+      )}
     </div>
   );
 }
