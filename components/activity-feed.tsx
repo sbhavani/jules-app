@@ -22,6 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PlanContent } from './plan-content';
 
 interface ActivityFeedProps {
   session: Session;
@@ -29,12 +30,6 @@ interface ActivityFeedProps {
   showCodeDiffs: boolean;
   onToggleCodeDiffs: (show: boolean) => void;
   onActivitiesChange: (activities: Activity[]) => void;
-}
-
-interface PlanStep {
-  title?: string;
-  description?: string;
-  [key: string]: unknown;
 }
 
 export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDiffs, onActivitiesChange }: ActivityFeedProps) {
@@ -64,34 +59,9 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
     try {
       const parsed = JSON.parse(content);
 
-      // If it's an array (like plan steps), format as list
-      if (Array.isArray(parsed)) {
-        return (
-          <div className="space-y-2">
-            {parsed.map((item: PlanStep, index: number) => (
-              <div key={index} className="pl-3 border-l-2 border-primary/30">
-                {item.title && <div className="font-medium text-xs">{item.title}</div>}
-                {item.description && <div className="text-muted-foreground text-[11px] mt-0.5 leading-relaxed">{item.description}</div>}
-                {!item.title && !item.description && <div className="text-xs">{typeof item === 'string' ? item : JSON.stringify(item)}</div>}
-              </div>
-            ))}
-          </div>
-        );
-      }
-
-      // If it's an object with steps, format specially
-      if (parsed.steps && Array.isArray(parsed.steps)) {
-        return (
-          <div className="space-y-2">
-            {parsed.description && <div className="mb-2 text-xs">{parsed.description}</div>}
-            {parsed.steps.map((step: PlanStep, index: number) => (
-              <div key={index} className="pl-3 border-l-2 border-primary/30">
-                <div className="font-medium text-xs">Step {index + 1}: {step.title || (typeof step === 'string' ? step : JSON.stringify(step))}</div>
-                {step.description && <div className="text-muted-foreground text-[11px] mt-0.5 leading-relaxed">{step.description}</div>}
-              </div>
-            ))}
-          </div>
-        );
+      // If it's an array (like plan steps) or object with steps, use PlanContent
+      if (Array.isArray(parsed) || (parsed.steps && Array.isArray(parsed.steps))) {
+        return <PlanContent content={parsed} />;
       }
 
       // Otherwise return formatted JSON

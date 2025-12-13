@@ -35,6 +35,8 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/themes": "^3.2.1",
     "@tailwindcss/typography": "^0.5.19",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -49,6 +51,7 @@
     "react-markdown": "^10.1.0",
     "recharts": "^3.5.1",
     "remark-gfm": "^4.0.1",
+    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
