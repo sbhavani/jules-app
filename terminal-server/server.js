@@ -2,6 +2,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const pty = require('node-pty');
 const path = require('path');
+const fs = require('fs');
 
 const server = http.createServer();
 const io = new Server(server, {
@@ -18,7 +19,10 @@ io.on('connection', (socket) => {
   console.log(`Client connected: ${socket.id}`);
 
   const { sessionId, workingDir } = socket.handshake.query;
-  const cwd = workingDir ? path.join('/workspace', workingDir) : '/workspace';
+
+  // Use /workspace for Docker, or parent directory for local development
+  const baseDir = process.env.WORKSPACE_DIR || (fs.existsSync('/workspace') ? '/workspace' : path.join(__dirname, '..', 'workspace'));
+  const cwd = workingDir ? path.join(baseDir, workingDir) : baseDir;
 
   // Spawn shell process
   const shell = process.env.SHELL || '/bin/bash';
@@ -79,9 +83,16 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 8080;
+
+// Determine and create workspace directory
+const workspaceDir = process.env.WORKSPACE_DIR || (fs.existsSync('/workspace') ? '/workspace' : path.join(__dirname, '..', 'workspace'));
+if (!fs.existsSync(workspaceDir)) {
+  fs.mkdirSync(workspaceDir, { recursive: true });
+}
+
 server.listen(PORT, () => {
   console.log(`Terminal server listening on port ${PORT}`);
-  console.log(`Workspace mounted at: /workspace`);
+  console.log(`Workspace directory: ${workspaceDir}`);
 });
 
 // Graceful shutdown
