@@ -7,17 +7,18 @@ import { SessionList } from './session-list';
 import { ActivityFeed } from './activity-feed';
 import { CodeDiffSidebar } from './code-diff-sidebar';
 import { AnalyticsDashboard } from './analytics-dashboard';
+import { SessionBoard } from './session-board';
 import { NewSessionDialog } from './new-session-dialog';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Menu, LogOut, Settings, BarChart3, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, LogOut, Settings, BarChart3, MessageSquare, ChevronLeft, ChevronRight, LayoutGrid } from 'lucide-react';
 
 
 export function AppLayout() {
   const { clearApiKey } = useJules();
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-  const [view, setView] = useState<'sessions' | 'analytics'>('sessions');
+  const [view, setView] = useState<'sessions' | 'analytics' | 'board'>('sessions');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -104,27 +105,33 @@ export function AppLayout() {
           </div>
 
           <div className="flex items-center gap-1">
-            {view === 'analytics' ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-3 hover:bg-white/5 text-white/80"
-                onClick={() => setView('sessions')}
-              >
-                <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
-                <span className="text-[10px] font-mono uppercase tracking-wider">Sessions</span>
-              </Button>
-            ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-3 hover:bg-white/5 text-white/80"
-                onClick={() => setView('analytics')}
-              >
-                <BarChart3 className="h-3.5 w-3.5 mr-1.5" />
-                <span className="text-[10px] font-mono uppercase tracking-wider">Analytics</span>
-              </Button>
-            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-3 hover:bg-white/5 text-white/80"
+              onClick={() => setView('sessions')}
+            >
+              <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
+              <span className="text-[10px] font-mono uppercase tracking-wider">Sessions</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-3 hover:bg-white/5 text-white/80"
+              onClick={() => setView('board')}
+            >
+              <LayoutGrid className="h-3.5 w-3.5 mr-1.5" />
+              <span className="text-[10px] font-mono uppercase tracking-wider">Board</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-3 hover:bg-white/5 text-white/80"
+              onClick={() => setView('analytics')}
+            >
+              <BarChart3 className="h-3.5 w-3.5 mr-1.5" />
+              <span className="text-[10px] font-mono uppercase tracking-wider">Analytics</span>
+            </Button>
             <NewSessionDialog onSessionCreated={handleSessionCreated} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -182,6 +189,8 @@ export function AppLayout() {
         <main className="flex-1 overflow-hidden bg-black">
           {view === 'analytics' ? (
             <AnalyticsDashboard />
+          ) : view === 'board' ? (
+            <SessionBoard />
           ) : selectedSession ? (
             <ActivityFeed
               session={selectedSession}
