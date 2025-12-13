@@ -7,8 +7,9 @@ const fs = require('fs');
 const server = http.createServer();
 const io = new Server(server, {
   cors: {
-    origin: process.env.ALLOWED_ORIGINS || 'http://localhost:3000',
-    methods: ['GET', 'POST']
+    origin: process.env.ALLOWED_ORIGINS || true, // Allow all origins in development
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 

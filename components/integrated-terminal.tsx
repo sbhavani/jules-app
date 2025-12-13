@@ -81,7 +81,12 @@ export function IntegratedTerminal({
       fitAddonRef.current = fitAddon
 
       // Connect to terminal server
-      const wsUrl = process.env.NEXT_PUBLIC_TERMINAL_WS_URL || 'ws://localhost:8080'
+      // Use same hostname as current page for remote access support
+      const wsUrl = process.env.NEXT_PUBLIC_TERMINAL_WS_URL ||
+        (typeof window !== 'undefined' ? `ws://${window.location.hostname}:8080` : 'ws://localhost:8080')
+
+      console.log('Connecting to terminal server:', wsUrl)
+
       socket = io(wsUrl, {
         query: { sessionId, workingDir }
       })
