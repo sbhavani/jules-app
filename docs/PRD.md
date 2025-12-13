@@ -82,6 +82,16 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
   - ✅ Success rate metrics
   - ✅ Average session duration
 
+- **ANALYTICS-002**: Code Impact Metrics _(New)_
+  - Analyze activity diffs to calculate lines added/removed/modified.
+  - Visualize "Code Churn" per session and repository.
+  - Track complexity trends over time.
+
+- **ANALYTICS-004**: Session Health Monitoring _(New)_
+  - Detect "stalled" sessions (active but no recent updates).
+  - Calculate session health scores based on error rate vs. progress.
+  - Alert users to interventions needed for stuck agents.
+
 #### AI Orchestration (P2 - Future)
 - **ORCH-001**: "The Architect" - Pre-implementation Plan Review ([#28](https://github.com/sbhavani/jules-app/issues/28)) 🟡 _Open_
   - Leverage a high-reasoning model (e.g., Gemini 1.5 Pro) to critique proposed plans.
@@ -461,14 +471,16 @@ All features are tracked as GitHub issues. Use this table for quick reference:
 | [#29](https://github.com/sbhavani/jules-app/issues/29) | ORCH-002 | "The Auditor" Security Analysis | 🟡 Open | Feature |
 | [#30](https://github.com/sbhavani/jules-app/issues/30) | ORCH-003 | "The Librarian" Auto-Docs | 🟡 Open | Feature |
 | [#31](https://github.com/sbhavani/jules-app/issues/31) | SESSION-009 | Kanban Board View | 🟡 Open | Feature |
+| _New_ | ANALYTICS-002 | Code Impact Metrics | 🟡 Open | Feature |
+| _New_ | ANALYTICS-004 | Session Health Monitoring | 🟡 Open | Feature |
 
 **Summary Statistics:**
-- ✅ Closed: 9 issues (32%)
-- 🟡 Open: 19 issues (68%)
+- ✅ Closed: 9 issues (30%)
+- 🟡 Open: 21 issues (70%)
 - P0 Critical: 6 issues (4 closed, 2 open)
 - P1 Important: 6 issues (4 closed, 2 open)
 - P2 Nice to Have: 4 issues (1 closed, 3 open)
-- Feature requests: 8 issues (0 closed, 8 open)
+- Feature requests: 10 issues (0 closed, 10 open)
 
 ### Technology Evaluations
 
