@@ -175,6 +175,12 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
 ### COULD HAVE (P2 - Future Enhancements)
 
 #### Developer Tooling
+- **DEV-001**: Integrated Local Terminal ([#34](https://github.com/sbhavani/jules-app/issues/34)) 🟡 _Open_
+  - Integrate a terminal within the Jules UI that connects to the user's local machine.
+  - Allows direct execution of commands in the context of the session's repository.
+  - Real-time output, command history, and ability to run custom scripts.
+  - Enhances developer workflow by providing immediate access to local development tools.
+
 - **TERMINAL-002**: Integrated Terminal _(Not tracked as issue)_
   - Full terminal emulator embedded in UI
   - Execute commands in session context
@@ -473,14 +479,15 @@ All features are tracked as GitHub issues. Use this table for quick reference:
 | [#31](https://github.com/sbhavani/jules-app/issues/31) | SESSION-009 | Kanban Board View | 🟡 Open | Feature |
 | [#32](https://github.com/sbhavani/jules-app/issues/32) | ANALYTICS-002 | Code Impact Metrics | 🟡 Open | Feature |
 | [#33](https://github.com/sbhavani/jules-app/issues/33) | ANALYTICS-004 | Session Health Monitoring | 🟡 Open | Feature |
+| [#34](https://github.com/sbhavani/jules-app/issues/34) | DEV-001 | Integrated Local Terminal | 🟡 Open | Feature |
 
 **Summary Statistics:**
-- ✅ Closed: 9 issues (30%)
-- 🟡 Open: 21 issues (70%)
+- ✅ Closed: 9 issues (29%)
+- 🟡 Open: 22 issues (71%)
 - P0 Critical: 6 issues (4 closed, 2 open)
 - P1 Important: 6 issues (4 closed, 2 open)
 - P2 Nice to Have: 4 issues (1 closed, 3 open)
-- Feature requests: 10 issues (0 closed, 10 open)
+- Feature requests: 11 issues (0 closed, 11 open)
 
 ### Technology Evaluations
 
