@@ -48,14 +48,6 @@ services:
       - CHOWN
       - SETGID
       - SETUID
-    # Enable GPU support if available (requires NVIDIA Container Toolkit)
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
 
 volumes:
   terminal-history:
