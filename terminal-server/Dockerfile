@@ -11,14 +11,11 @@ RUN apt-get update && apt-get install -y curl build-essential \
     git \
     vim \
     nano \
+    emacs-nox \
     && rm -rf /var/lib/apt/lists/*
 
-# Install gemini-cli from GitHub
-RUN git clone https://github.com/google-gemini/gemini-cli.git /tmp/gemini-cli \
-    && cd /tmp/gemini-cli \
-    && npm install \
-    && npm link \
-    && rm -rf /tmp/gemini-cli
+# Install gemini-cli globally using npm
+RUN npm install -g @google/gemini-cli
 
 # Create app directory
 WORKDIR /app
