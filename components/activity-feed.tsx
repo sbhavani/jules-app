@@ -481,6 +481,7 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
                 size="icon"
                 onClick={toggleCodeDiffsSidebar}
                 title="View final code changes"
+                aria-label="Toggle code diffs"
                 className={`h-7 w-7 hover:bg-white/5 ${showCodeDiffs ? 'bg-purple-500/20 text-purple-400' : 'text-white/60'}`}
               >
                 <Code className="h-3.5 w-3.5" />
@@ -489,7 +490,7 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/5 text-white/60">
+                <Button variant="ghost" size="icon" aria-label="More actions" className="h-7 w-7 hover:bg-white/5 text-white/60">
                   <MoreVertical className="h-3.5 w-3.5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -627,6 +628,8 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
                                   <div className="mt-2 pt-2 border-t border-white/[0.05]">
                                     <button
                                       onClick={() => toggleBashOutput(activity.id)}
+                                      aria-expanded={expandedBashOutputs.has(activity.id)}
+                                      aria-label={expandedBashOutputs.has(activity.id) ? "Collapse bash output" : "Expand bash output"}
                                       className="flex items-center gap-2 text-[9px] font-mono uppercase tracking-wider text-green-400 hover:text-green-300 transition-colors mb-2"
                                     >
                                       {expandedBashOutputs.has(activity.id) ? (
@@ -678,6 +681,8 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
                           <div className="mt-3 pt-3 border-t border-white/[0.08]">
                             <button
                               onClick={() => toggleBashOutput(activity.id)}
+                              aria-expanded={expandedBashOutputs.has(activity.id)}
+                              aria-label={expandedBashOutputs.has(activity.id) ? "Collapse bash output" : "Expand bash output"}
                               className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-green-400 hover:text-green-300 transition-colors mb-2"
                             >
                               {expandedBashOutputs.has(activity.id) ? (
@@ -733,7 +738,7 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
               }}
               disabled={sending}
             />
-            <Button type="submit" size="icon" disabled={!message.trim() || sending} className="h-9 w-9 bg-purple-600 hover:bg-purple-500 text-white">
+            <Button type="submit" size="icon" aria-label="Send message" disabled={!message.trim() || sending} className="h-9 w-9 bg-purple-600 hover:bg-purple-500 text-white">
               <Send className="h-3.5 w-3.5" />
             </Button>
           </div>
