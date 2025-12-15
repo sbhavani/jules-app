@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/ui/combobox';
-import { Plus } from 'lucide-react';
+import { Plus, Loader2 } from 'lucide-react';
 
 interface NewSessionDialogProps {
   onSessionCreated?: () => void;
@@ -137,6 +137,7 @@ export function NewSessionDialog({ onSessionCreated, initialValues, trigger }: N
           <div className="space-y-1.5">
             <Label htmlFor="source" className="text-xs font-semibold">Source Repository</Label>
             <Combobox
+              id="source"
               options={sources.map((source) => ({
                 value: source.id,
                 label: source.name,
@@ -234,7 +235,14 @@ export function NewSessionDialog({ onSessionCreated, initialValues, trigger }: N
               Cancel
             </Button>
             <Button type="submit" disabled={loading || !formData.sourceId || !formData.prompt} className="h-8 text-xs">
-              {loading ? 'Creating...' : 'Create Session'}
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                'Create Session'
+              )}
             </Button>
           </div>
         </form>
