@@ -185,7 +185,7 @@ export function AnalyticsDashboard() {
           </div>
         <div className="flex items-center gap-2">
           <Select value={dateRange} onValueChange={setDateRange}>
-            <SelectTrigger className="w-[140px] h-8 text-xs text-foreground">
+            <SelectTrigger className="w-[140px] h-8 text-xs text-foreground" aria-label="Select time period">
               <SelectValue placeholder="Select period" />
             </SelectTrigger>
             <SelectContent>
@@ -195,7 +195,7 @@ export function AnalyticsDashboard() {
               <SelectItem value="90" className="text-xs">Last 3 months</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="icon" onClick={handleRefresh} disabled={refreshing} className="h-8 w-8 hover:bg-primary/10 hover:border-primary/50 transition-colors">
+          <Button variant="outline" size="icon" onClick={handleRefresh} disabled={refreshing} aria-label="Refresh analytics" className="h-8 w-8 hover:bg-primary/10 hover:border-primary/50 transition-colors">
             <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin text-primary' : ''}`} />
           </Button>
         </div>
