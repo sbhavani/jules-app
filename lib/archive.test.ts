@@ -43,9 +43,9 @@ describe('Archive Utility', () => {
 
   afterAll(() => {
     // Cleanup
-    // @ts-ignore
+    // @ts-expect-error: Deleting global properties for cleanup
     delete global.window;
-    // @ts-ignore
+    // @ts-expect-error: Deleting global properties for cleanup
     delete global.localStorage;
   });
 

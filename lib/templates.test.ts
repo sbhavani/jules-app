@@ -2,7 +2,7 @@ import {
   getTemplates,
   saveTemplate,
   deleteTemplate,
-  getTemplate,
+  // getTemplate, // Removed as it's unused
 } from './templates';
 import { SessionTemplate } from '@/types/jules';
 
@@ -53,11 +53,11 @@ describe('Templates Utility', () => {
 
   afterAll(() => {
     // Cleanup
-    // @ts-ignore
+    // @ts-expect-error: Deleting global properties for cleanup
     delete global.window;
-    // @ts-ignore
+    // @ts-expect-error: Deleting global properties for cleanup
     delete global.localStorage;
-    // @ts-ignore
+    // @ts-expect-error: Deleting global properties for cleanup
     delete global.crypto;
   });
 
