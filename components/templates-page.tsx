@@ -52,7 +52,7 @@ export function TemplatesPage({ onStartSession }: TemplatesPageProps) {
           </div>
           <Button 
             onClick={() => setIsCreateOpen(true)} 
-            className="bg-purple-600 hover:bg-purple-500 text-white h-8 text-[10px] uppercase tracking-widest font-mono border-0"
+            className="h-8 text-[10px] uppercase tracking-widest font-mono border-0"
           >
             <Plus className="h-3.5 w-3.5 mr-1.5" />
             Create Template

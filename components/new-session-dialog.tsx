@@ -168,7 +168,7 @@ export function NewSessionDialog({ onSessionCreated, initialValues, trigger, ope
           {trigger ? (
             trigger
           ) : (
-            <Button className="w-full sm:w-auto h-8 text-[10px] font-mono uppercase tracking-widest bg-purple-600 hover:bg-purple-500 text-white border-0">
+            <Button className="w-full sm:w-auto h-8 text-[10px] font-mono uppercase tracking-widest border-0">
               <Plus className="h-3.5 w-3.5 mr-1.5" />
               New Session
             </Button>

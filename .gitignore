@@ -54,3 +54,4 @@ next-env.d.ts
 # temporary files
 *.png
 !public/**/*.png
+.aider*

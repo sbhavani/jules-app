@@ -149,7 +149,7 @@ export function TemplateFormDialog({ open, onOpenChange, template, onSave, initi
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="h-8 text-xs">
               Cancel
             </Button>
-            <Button type="submit" className="h-8 text-xs bg-purple-600 hover:bg-purple-500 text-white">
+            <Button type="submit" className="h-8 text-xs">
               Save Template
             </Button>
           </div>
