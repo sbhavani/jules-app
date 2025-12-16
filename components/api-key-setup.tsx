@@ -56,7 +56,7 @@ export function ApiKeySetup() {
                 Your API key is stored locally in your browser and never sent to any server except Jules API.
               </p>
             </div>
-            <Button type="submit" className="w-full relative overflow-hidden" disabled={!key.trim() || isSaving}>
+            <Button type="submit" className="w-full relative overflow-hidden font-mono uppercase tracking-widest text-xs" disabled={!key.trim() || isSaving}>
               <AnimatePresence mode="wait" initial={false}>
                 {isSaving ? (
                   <motion.span
