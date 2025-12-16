@@ -45,6 +45,7 @@ export function ApiKeySetup() {
                 onChange={(e) => setKey(e.target.value)}
                 className="w-full"
               />
+              <p className="text-xs text-muted-foreground">e.g., sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
               <p className="text-xs text-muted-foreground">
                 Your API key is stored locally in your browser and never sent to any server except Jules API.
               </p>
