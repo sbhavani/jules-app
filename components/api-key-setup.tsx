@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useJules } from '@/lib/jules/provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,11 +10,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export function ApiKeySetup() {
   const { setApiKey } = useJules();
   const [key, setKey] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (key.trim()) {
+      setIsSaving(true);
+      // Simulate a small delay for the animation to be perceived
+      await new Promise(resolve => setTimeout(resolve, 600));
       setApiKey(key.trim());
+      // No need to set isSaving(false) as the component will likely unmount or redirect
     }
   };
 
@@ -50,8 +56,31 @@ export function ApiKeySetup() {
                 Your API key is stored locally in your browser and never sent to any server except Jules API.
               </p>
             </div>
-            <Button type="submit" className="w-full" disabled={!key.trim()}>
-              Save your key
+            <Button type="submit" className="w-full relative overflow-hidden" disabled={!key.trim() || isSaving}>
+              <AnimatePresence mode="wait" initial={false}>
+                {isSaving ? (
+                  <motion.span
+                    key="saving"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex items-center gap-2"
+                  >
+                    Saving...
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="save"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    Save your key
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </Button>
           </form>
 
