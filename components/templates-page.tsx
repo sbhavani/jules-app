@@ -43,7 +43,7 @@ export function TemplatesPage({ onStartSession }: TemplatesPageProps) {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 bg-black">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-black">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
           <div>
