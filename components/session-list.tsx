@@ -118,7 +118,7 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
     return (
       <div className="flex flex-col items-center justify-center gap-3 p-6">
         <p className="text-xs text-destructive text-center">{error}</p>
-        <Button variant="outline" size="sm" onClick={loadSessions} className="h-7 text-xs">
+        <Button variant="outline" size="sm" onClick={loadSessions} className="h-7 text-[10px] font-mono uppercase tracking-widest">
           Retry
         </Button>
       </div>

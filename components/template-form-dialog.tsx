@@ -146,10 +146,10 @@ export function TemplateFormDialog({ open, onOpenChange, template, onSave, initi
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="h-8 text-xs">
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="h-8 text-[10px] font-mono uppercase tracking-widest">
               Cancel
             </Button>
-            <Button type="submit" className="h-8 text-xs">
+            <Button type="submit" className="h-8 text-[10px] font-mono uppercase tracking-widest">
               Save Template
             </Button>
           </div>
