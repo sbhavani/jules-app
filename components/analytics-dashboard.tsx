@@ -173,7 +173,7 @@ export function AnalyticsDashboard() {
 
   return (
     <div className="h-full overflow-hidden bg-black">
-      <div className="h-full overflow-y-auto overflow-x-hidden p-4 space-y-4">
+      <div className="h-full overflow-y-auto overflow-x-hidden p-2 sm:p-4 space-y-4">
         <div className="flex items-center justify-between pb-3 border-b">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
