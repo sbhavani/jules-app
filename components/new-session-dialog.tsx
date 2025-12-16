@@ -311,10 +311,10 @@ export function NewSessionDialog({ onSessionCreated, initialValues, trigger, ope
             )}
 
             <div className="flex gap-2 justify-end pt-2">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)} className="h-8 text-xs">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)} className="h-8 text-[10px] font-mono uppercase tracking-widest">
                 Cancel
               </Button>
-              <Button type="submit" disabled={loading || !formData.sourceId || !formData.prompt} className="h-8 text-xs">
+              <Button type="submit" disabled={loading || !formData.sourceId || !formData.prompt} className="h-8 text-[10px] font-mono uppercase tracking-widest">
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />

@@ -531,7 +531,7 @@ export function ActivityFeed({ session, onArchive, showCodeDiffs, onToggleCodeDi
         <div className="border-b border-white/[0.08] bg-red-950/20 px-4 py-3">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[11px] font-mono text-red-400 uppercase tracking-wide">{error}</p>
-            <Button variant="outline" size="sm" onClick={() => loadActivities(true)} className="h-7 text-[10px] uppercase tracking-wider border-white/10 hover:bg-white/5 text-white/80">
+            <Button variant="outline" size="sm" onClick={() => loadActivities(true)} className="h-7 text-[10px] font-mono uppercase tracking-wider border-white/10 hover:bg-white/5 text-white/80">
               Retry
             </Button>
           </div>
