@@ -21,7 +21,7 @@ export function ApiKeySetup() {
     <div className="flex min-h-screen items-center justify-center p-4 bg-muted/30">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Welcome to Jules Task Manager</CardTitle>
+          <CardTitle>Hey there! Let's get Jules setup.</CardTitle>
           <CardDescription>
             Enter your Jules API key to get started. Get your key from the{' '}
             <a
@@ -40,7 +40,7 @@ export function ApiKeySetup() {
             <div className="space-y-2">
               <Input
                 type="password"
-                placeholder="Enter your Jules API key"
+                placeholder="Your Jules API key"
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
                 className="w-full"
@@ -50,7 +50,7 @@ export function ApiKeySetup() {
               </p>
             </div>
             <Button type="submit" className="w-full" disabled={!key.trim()}>
-              Continue
+              Save your key
             </Button>
           </form>
 
