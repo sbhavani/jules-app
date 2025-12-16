@@ -24,7 +24,7 @@ export function ApiKeySetup() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-muted/30">
+    <div className="flex min-h-screen items-center justify-center p-2 sm:p-4 bg-muted/30">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Hey there! Let's get Jules setup.</CardTitle>
