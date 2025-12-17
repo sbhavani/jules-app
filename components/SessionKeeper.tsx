@@ -35,7 +35,7 @@ export interface SessionKeeperConfig {
 
   // Smart Auto-Pilot Settings
   smartPilotEnabled: boolean;
-  supervisorProvider: 'openai' | 'anthropic' | 'gemini';
+  supervisorProvider: 'openai' | 'openai-assistants' | 'anthropic' | 'gemini';
   supervisorApiKey: string;
   supervisorModel: string;
   contextMessageCount: number;
@@ -67,10 +67,10 @@ const DEFAULT_CONFIG: SessionKeeperConfig = {
   ],
   customMessages: {},
   smartPilotEnabled: false,
-  supervisorProvider: 'openai',
+  supervisorProvider: 'openai', // Default to stateless Chat Completions
   supervisorApiKey: '',
-  supervisorModel: '', // Will default based on provider
-  contextMessageCount: 20, // Default window size
+  supervisorModel: '',
+  contextMessageCount: 20,
 };
 
 export function SessionKeeper() {
@@ -93,7 +93,6 @@ export function SessionKeeper() {
     if (savedConfig) {
       try {
         const parsed = JSON.parse(savedConfig);
-        // Merge to ensure new fields exist
         setConfig({ ...DEFAULT_CONFIG, ...parsed });
       } catch (e) {
         console.error('Failed to parse session keeper config', e);
@@ -214,11 +213,8 @@ export function SessionKeeper() {
                   newActivities = sortedActivities.filter(a => new Date(a.createdAt).getTime() > new Date(sessionState.lastProcessedActivityTimestamp).getTime());
                 }
 
-                // Construct Prompt/History Update
-                // For OpenAI Assistants (stateful), we only send the NEWEST user update.
-                // For others (stateless), we construct the full history.
-
-                const isStateful = config.supervisorProvider === 'openai';
+                // Logic Selection: Stateful (Assistants API) vs Stateless (Simulated)
+                const isStateful = config.supervisorProvider === 'openai-assistants';
 
                 let messagesToSend: { role: string, content: string }[] = [];
 
@@ -247,7 +243,7 @@ export function SessionKeeper() {
                 }
 
                 if (!isStateful) {
-                  // If stateless, prepend the stored history
+                  // If stateless (Chat Completions / Anthropic / Gemini), prepend the stored history
                   messagesToSend = [...sessionState.history, ...messagesToSend];
                   // Truncate
                   if (messagesToSend.length > config.contextMessageCount) {
@@ -281,8 +277,8 @@ export function SessionKeeper() {
                       sessionState.openaiThreadId = data.threadId;
                       sessionState.openaiAssistantId = data.assistantId;
                       // For local display history, just push the last interaction
-                      sessionState.history.push(...messagesToSend); // User part
-                      sessionState.history.push({ role: 'assistant', content: messageToSend }); // AI Part
+                      sessionState.history.push(...messagesToSend);
+                      sessionState.history.push({ role: 'assistant', content: messageToSend });
                     } else {
                       // Stateless: Replace history with what we sent + response
                       sessionState.history = [...messagesToSend, { role: 'assistant', content: messageToSend }];
@@ -469,11 +465,12 @@ export function SessionKeeper() {
                     <Label>Provider</Label>
                     <Select
                       value={config.supervisorProvider}
-                      onValueChange={(v: 'openai' | 'anthropic' | 'gemini') => setConfig({ ...config, supervisorProvider: v })}
+                      onValueChange={(v: 'openai' | 'openai-assistants' | 'anthropic' | 'gemini') => setConfig({ ...config, supervisorProvider: v })}
                     >
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="openai">OpenAI (GPT-4)</SelectItem>
+                        <SelectItem value="openai">OpenAI (Chat Completions)</SelectItem>
+                        <SelectItem value="openai-assistants">OpenAI (Assistants API)</SelectItem>
                         <SelectItem value="anthropic">Anthropic (Claude)</SelectItem>
                         <SelectItem value="gemini">Google (Gemini)</SelectItem>
                       </SelectContent>
