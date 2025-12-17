@@ -10,6 +10,7 @@ export interface Session {
   sourceId: string;
   title: string;
   status: 'active' | 'completed' | 'failed' | 'paused' | 'awaiting_approval';
+  rawState?: string; // Original API state
   createdAt: string;
   updatedAt: string;
   lastActivityAt?: string;

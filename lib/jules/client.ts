@@ -271,6 +271,7 @@ export class JulesClient {
       sourceId: session.sourceContext?.source?.replace('sources/github/', '') || '',
       title: session.title || '',
       status: this.mapState(session.state || ''),
+      rawState: session.state, // Pass through original state
       createdAt: session.createTime,
       updatedAt: session.updateTime,
       lastActivityAt: session.lastActivityAt,
@@ -338,6 +339,16 @@ export class JulesClient {
     await this.request<void>(`/sessions/${sessionId}:approvePlan`, {
       method: 'POST',
       body: JSON.stringify({}),
+    });
+  }
+
+  async resumeSession(sessionId: string): Promise<void> {
+    // No direct 'resume' endpoint found in SDK, using createActivity to wake it up.
+    // This is a common pattern for resuming paused/completed sessions in agentic workflows.
+    await this.createActivity({
+      sessionId,
+      content: 'Please resume working on this task.',
+      type: 'message'
     });
   }
 
