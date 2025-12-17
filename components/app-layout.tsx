@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useJules } from '@/lib/jules/provider';
 import type { Session, Activity, SessionTemplate } from '@/types/jules';
 import { SessionList } from './session-list';
@@ -18,7 +19,9 @@ import { useTerminalAvailable } from '@/hooks/use-terminal-available';
 
 
 export function AppLayout() {
-  const { clearApiKey } = useJules();
+  const { client, clearApiKey } = useJules();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { isAvailable: terminalAvailable } = useTerminalAvailable();
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [view, setView] = useState<'sessions' | 'analytics' | 'templates'>('sessions');
@@ -45,6 +48,25 @@ export function AppLayout() {
     prompt?: string;
     startingBranch?: string;
   } | undefined>(undefined);
+
+  // Sync session selection with URL query param
+  useEffect(() => {
+    const sessionId = searchParams.get('sessionId');
+    if (sessionId && client) {
+      if (selectedSession?.id !== sessionId) {
+        // Load session details
+        client.getSession(sessionId)
+          .then(session => {
+            setSelectedSession(session);
+            setView('sessions');
+          })
+          .catch(err => {
+            console.error('Failed to load session from URL', err);
+            // Optionally clear param if invalid
+          });
+      }
+    }
+  }, [searchParams, client, selectedSession?.id]);
 
   const startResizing = useCallback(() => {
     setIsResizing(true);
@@ -79,6 +101,10 @@ export function AppLayout() {
     setSelectedSession(session);
     setView('sessions');
     setMobileMenuOpen(false);
+    // Update URL without refreshing
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('sessionId', session.id);
+    router.push(`/?${newParams.toString()}`);
   };
 
   const handleSessionCreated = () => {
@@ -90,6 +116,9 @@ export function AppLayout() {
     // Clear the selected session and refresh the session list
     setSelectedSession(null);
     setRefreshKey((prev) => prev + 1);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('sessionId');
+    router.push(`/?${newParams.toString()}`);
   };
 
   const handleLogout = () => {
