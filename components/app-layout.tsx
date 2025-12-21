@@ -426,11 +426,7 @@ export function AppLayout() {
                 {!codeDiffSidebarCollapsed && (
                   <CodeDiffSidebar
                     activities={currentActivities}
-                    repoUrl={
-                      selectedSession
-                        ? `https://github.com/${selectedSession.sourceId}`
-                        : undefined
-                    }
+                    repoUrl={`https://github.com/${selectedSession!.sourceId}`}
                   />
                 )}
               </div>
