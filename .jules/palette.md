@@ -45,6 +45,10 @@
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
 
+## 2025-12-21 - [Kanban Empty States & Filter Context]
+**Learning:** Kanban columns without an explicit empty state can look broken or "unfinished" to users. Additionally, providing counts within filter dropdowns (e.g., repository counts) offers valuable context before the user even makes a selection, reducing trial-and-error filtering.
+**Action:** Implement dashed-border empty states for list/grid containers and include counts in data-dense filters.
+
 ## 2025-12-21 - [Search Reset Accessibility]
 **Learning:** Search inputs without a clear button force users to perform multiple backspace actions, which is a friction point, especially on mobile or for long queries. Providing a one-click reset improves the fluidity of list filtering.
 **Action:** Add a clear (X) button to all primary search inputs.

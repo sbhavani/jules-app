@@ -96,6 +96,16 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
     return Array.from(repos).sort();
   }, [sessions, archivedSessionIds]);
 
+  const repoCountsMap = useMemo(() => {
+    const counts: Record<string, number> = {};
+    sessions.forEach(session => {
+      if (session.sourceId && !archivedSessionIds.has(session.id)) {
+        counts[session.sourceId] = (counts[session.sourceId] || 0) + 1;
+      }
+    });
+    return counts;
+  }, [sessions, archivedSessionIds]);
+
   const kanbanData = useMemo(() => {
     const validColumnIds = new Set(COLUMNS.map(col => col.id));
     
@@ -176,9 +186,18 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
         <div>
           <div className="flex items-center gap-3">
             <h2 className="text-sm font-bold text-white uppercase tracking-widest">Control Tower</h2>
-            <Badge variant="outline" className="h-4 px-1.5 text-[8px] border-destructive/50 bg-destructive/10 text-destructive font-mono uppercase tracking-tighter animate-pulse">
-              Persistence Disabled
-            </Badge>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge variant="outline" className="h-4 px-1.5 text-[8px] border-destructive/50 bg-destructive/10 text-destructive font-mono uppercase tracking-tighter animate-pulse cursor-help">
+                    Persistence Disabled
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="bg-zinc-900 border-white/10 text-white text-[10px] max-w-[200px]">
+                  <p>Kanban status changes are currently local-only and will be lost on page refresh. Persistence is coming soon.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <p className="text-[10px] text-white/40 uppercase tracking-wider mt-0.5">Manage session lifecycle (Status updates are local-only)</p>
         </div>
@@ -196,11 +215,17 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
               </SelectTrigger>
               <SelectContent className="bg-zinc-950 border-white/10 text-white">
                 <SelectItem value="all" className="text-[10px] font-mono uppercase tracking-wider focus:bg-white/10 focus:text-white">
-                  All Repositories
+                  <div className="flex items-center justify-between w-full gap-8">
+                    <span>All Repositories</span>
+                    <span className="text-[9px] opacity-40">({sessions.filter(s => !archivedSessionIds.has(s.id)).length})</span>
+                  </div>
                 </SelectItem>
                 {availableRepos.map((repo) => (
                   <SelectItem key={repo} value={repo} className="text-[10px] font-mono uppercase tracking-wider focus:bg-white/10 focus:text-white">
-                    {repo}
+                    <div className="flex items-center justify-between w-full gap-8">
+                      <span>{repo}</span>
+                      <span className="text-[9px] opacity-40">({repoCountsMap[repo] || 0})</span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -235,12 +260,21 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
                       {columnCounts[column.id] || 0}
                   </Badge>
                 </KanbanHeader>
-                <KanbanCards<SessionKanbanItem> id={column.id} className="bg-transparent gap-3 p-3">
+                <KanbanCards<SessionKanbanItem> 
+                  id={column.id} 
+                  className="bg-transparent gap-3 p-3"
+                  emptyContent={
+                    <div className="flex flex-col items-center justify-center h-24 border border-dashed border-white/5 rounded-lg opacity-20">
+                      <p className="text-[9px] font-mono uppercase tracking-widest text-white">No {column.name} Sessions</p>
+                    </div>
+                  }
+                >
                   {(item) => (
                     <KanbanCard<SessionKanbanItem> 
                       key={item.id} 
                       {...item} 
-                      className="bg-zinc-900 border-white/10 hover:border-white/20 focus-visible:ring-1 focus-visible:ring-white/20 transition-all p-0 overflow-hidden group"
+                      className="bg-zinc-900 border-white/10 hover:border-white/20 focus-visible:ring-1 focus-visible:ring-white/20 transition-all p-0 overflow-hidden group cursor-pointer"
+                      onClick={() => onSelectSession(item.session)}
                     >
                       <SessionCardContent session={item.session} onSelect={onSelectSession} />
                     </KanbanCard>

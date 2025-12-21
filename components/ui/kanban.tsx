@@ -156,11 +156,13 @@ export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> =
   Omit<HTMLAttributes<HTMLDivElement>, "children" | "id"> & {
     children: (item: T) => ReactNode;
     id: string;
+    emptyContent?: ReactNode;
   };
 
 export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
   children,
   className,
+  emptyContent,
   ...props
 }: KanbanCardsProps<T>) => {
   const { data } = useContext(KanbanContext) as KanbanContextProps<T>;
@@ -174,7 +176,11 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
           className={cn("flex flex-grow flex-col gap-2 p-2", className)}
           {...props}
         >
-          {filteredData.map(children)}
+          {filteredData.length > 0 ? (
+            filteredData.map(children)
+          ) : (
+            emptyContent
+          )}
         </div>
       </SortableContext>
       <ScrollBar orientation="vertical" />
