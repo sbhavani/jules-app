@@ -3,6 +3,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DiffViewer } from "@/components/ui/diff-viewer";
 import type { Activity } from "@/types/jules";
+import { FileCode } from "lucide-react";
 
 interface CodeDiffSidebarProps {
   activities: Activity[];
@@ -15,10 +16,18 @@ export function CodeDiffSidebar({ activities, repoUrl }: CodeDiffSidebarProps) {
 
   if (finalDiff.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full p-6">
-        <p className="text-xs text-muted-foreground text-center leading-relaxed">
-          No code changes yet.
-        </p>
+      <div className="flex flex-col items-center justify-center h-full p-6 text-center space-y-4">
+        <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
+          <FileCode className="h-6 w-6 text-white/20" />
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold text-white/40 uppercase tracking-widest">
+            No Changes
+          </h3>
+          <p className="text-[11px] text-white/30 font-mono leading-relaxed">
+            Code modifications will appear here once Jules makes changes.
+          </p>
+        </div>
       </div>
     );
   }

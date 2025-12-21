@@ -230,9 +230,16 @@ export function NewSessionDialog({
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="source" className="text-xs font-semibold">
-                Source Repository
-              </Label>
+              <div className="flex justify-between items-center">
+                <Label htmlFor="source" className="text-xs font-semibold">
+                  Source Repository <span className="text-red-500">*</span>
+                </Label>
+                {!formData.sourceId && (
+                  <span className="text-[10px] text-muted-foreground italic">
+                    Required
+                  </span>
+                )}
+              </div>
               <Combobox
                 id="source"
                 options={sources.map((source) => ({
@@ -283,6 +290,9 @@ export function NewSessionDialog({
                 }
                 className="h-9 text-xs"
               />
+              <p className="text-[10px] text-muted-foreground">
+                The branch Jules will start from.
+              </p>
             </div>
 
             <div className="space-y-1.5">
@@ -303,8 +313,13 @@ export function NewSessionDialog({
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
                 <Label htmlFor="prompt" className="text-xs font-semibold">
-                  Instructions
+                  Instructions <span className="text-red-500">*</span>
                 </Label>
+                {!formData.prompt && (
+                  <span className="text-[10px] text-muted-foreground italic">
+                    Required
+                  </span>
+                )}
                 {formData.prompt && (
                   <Button
                     type="button"
