@@ -21,7 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatDistanceToNow, parseISO, isValid } from "date-fns";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { formatDistanceToNow, parseISO, isValid, format } from "date-fns";
 import { ExternalLink, GitBranch, Clock, RefreshCw, Filter } from "lucide-react";
 import { getArchivedSessions } from "@/lib/archive";
 
@@ -214,34 +220,36 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
       </header>
 
       <div className="flex-1 overflow-hidden p-6">
-        <KanbanProvider<SessionKanbanItem>
-          columns={COLUMNS}
-          data={kanbanData}
-          onDataChange={handleDataChange}
-          className="h-full"
-        >
-          {(column) => (
-            <KanbanBoardRoot key={column.id} id={column.id} className="bg-zinc-950 border-white/[0.08] rounded-none">
-              <KanbanHeader className="border-b border-white/[0.08] flex items-center justify-between px-3 py-2 bg-black/40">
-                <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">{column.name}</span>
-                <Badge variant="outline" className="h-4 px-1.5 text-[9px] border-white/10 bg-white/5 text-white/40">
-                    {columnCounts[column.id] || 0}
-                </Badge>
-              </KanbanHeader>
-              <KanbanCards<SessionKanbanItem> id={column.id} className="bg-transparent gap-3 p-3">
-                {(item) => (
-                  <KanbanCard<SessionKanbanItem> 
-                    key={item.id} 
-                    {...item} 
-                    className="bg-zinc-900 border-white/10 hover:border-white/20 focus-visible:ring-1 focus-visible:ring-white/20 transition-all p-0 overflow-hidden group"
-                  >
-                    <SessionCardContent session={item.session} onSelect={onSelectSession} />
-                  </KanbanCard>
-                )}
-              </KanbanCards>
-            </KanbanBoardRoot>
-          )}
-        </KanbanProvider>
+        <TooltipProvider>
+          <KanbanProvider<SessionKanbanItem>
+            columns={COLUMNS}
+            data={kanbanData}
+            onDataChange={handleDataChange}
+            className="h-full"
+          >
+            {(column) => (
+              <KanbanBoardRoot key={column.id} id={column.id} className="bg-zinc-950 border-white/[0.08] rounded-none">
+                <KanbanHeader className="border-b border-white/[0.08] flex items-center justify-between px-3 py-2 bg-black/40">
+                  <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">{column.name}</span>
+                  <Badge variant="outline" className="h-4 px-1.5 text-[9px] border-white/10 bg-white/5 text-white/40">
+                      {columnCounts[column.id] || 0}
+                  </Badge>
+                </KanbanHeader>
+                <KanbanCards<SessionKanbanItem> id={column.id} className="bg-transparent gap-3 p-3">
+                  {(item) => (
+                    <KanbanCard<SessionKanbanItem> 
+                      key={item.id} 
+                      {...item} 
+                      className="bg-zinc-900 border-white/10 hover:border-white/20 focus-visible:ring-1 focus-visible:ring-white/20 transition-all p-0 overflow-hidden group"
+                    >
+                      <SessionCardContent session={item.session} onSelect={onSelectSession} />
+                    </KanbanCard>
+                  )}
+                </KanbanCards>
+              </KanbanBoardRoot>
+            )}
+          </KanbanProvider>
+        </TooltipProvider>
       </div>
     </div>
   );
@@ -254,7 +262,7 @@ function SessionCardContent({
   session: Session; 
   onSelect: (session: Session) => void 
 }) {
-  const formatDate = (dateString?: string) => {
+  const getRelativeDate = (dateString?: string) => {
     if (!dateString) return "Unknown";
     try {
       const date = parseISO(dateString);
@@ -265,6 +273,17 @@ function SessionCardContent({
     }
   };
 
+  const getFullDate = (dateString?: string) => {
+    if (!dateString) return "Unknown date";
+    try {
+      const date = parseISO(dateString);
+      if (!isValid(date)) return "Unknown date";
+      return format(date, "PPpp"); // e.g. "Apr 29, 2021, 9:30 PM"
+    } catch {
+      return "Unknown date";
+    }
+  };
+
   return (
     <div className="p-3.5 space-y-3">
       <div className="space-y-1.5">
@@ -272,18 +291,32 @@ function SessionCardContent({
           {session.title || "Untitled Session"}
         </h4>
         {session.sourceId && (
-          <div className="flex items-center gap-1.5 text-[9px] text-white/40 font-mono">
-            <GitBranch className="h-2.5 w-2.5" />
-            <span className="truncate uppercase tracking-tight">{session.sourceId}</span>
-          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-1.5 text-[9px] text-white/40 font-mono cursor-default w-fit max-w-full">
+                <GitBranch className="h-2.5 w-2.5 shrink-0" />
+                <span className="truncate uppercase tracking-tight">{session.sourceId}</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="bg-zinc-900 border-white/10 text-white text-[10px] z-[60]">
+              <p>{session.sourceId}</p>
+            </TooltipContent>
+          </Tooltip>
         )}
       </div>
 
       <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-1.5 text-[9px] text-white/30 font-mono uppercase tracking-tighter">
-          <Clock className="h-2.5 w-2.5" />
-          <span>{formatDate(session.lastActivityAt || session.updatedAt)}</span>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-1.5 text-[9px] text-white/30 font-mono uppercase tracking-tighter cursor-default">
+              <Clock className="h-2.5 w-2.5" />
+              <span>{getRelativeDate(session.lastActivityAt || session.updatedAt)}</span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="bg-zinc-900 border-white/10 text-white text-[10px] z-[60]">
+            <p>{getFullDate(session.lastActivityAt || session.updatedAt)}</p>
+          </TooltipContent>
+        </Tooltip>
         
         <Button 
           variant="ghost" 
