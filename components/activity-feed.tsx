@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useJules } from "@/lib/jules/provider";
 import type { Activity, Session } from "@/types/jules";
 import { Card, CardContent } from "@/components/ui/card";
@@ -391,18 +391,10 @@ export function ActivityFeed({
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full bg-black">
-        <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
-          Loading activities...
-        </p>
-      </div>
-    );
-  }
+
 
   // Filter activities the same way as we do for display
-  const filteredActivities = activities.filter((activity) => {
+  const filteredActivities = useMemo(() => activities.filter((activity) => {
     // Always keep activities with bash output or diffs, regardless of content
     if (activity.bashOutput || activity.diff) return true;
 
@@ -424,12 +416,53 @@ export function ActivityFeed({
       // Not JSON, keep it
     }
     return true;
-  });
+  }), [activities]);
 
   const latestActivity =
     filteredActivities.length > 0
       ? filteredActivities[filteredActivities.length - 1]
       : null;
+
+  const groupedActivities = useMemo(() => {
+    // Group consecutive progress activities from the same role
+    const grouped: Array<Activity | Activity[]> = [];
+    let currentGroup: Activity[] | null = null;
+
+    filteredActivities.forEach((activity, index) => {
+      const shouldGroup =
+        activity.type === "progress" && activity.role === "agent";
+      const prevActivity = index > 0 ? filteredActivities[index - 1] : null;
+      const prevShouldGroup =
+        prevActivity &&
+        prevActivity.type === "progress" &&
+        prevActivity.role === "agent";
+
+      if (shouldGroup) {
+        if (prevShouldGroup && currentGroup) {
+          currentGroup.push(activity);
+        } else {
+          currentGroup = [activity];
+          grouped.push(currentGroup);
+        }
+      } else {
+        currentGroup = null;
+        grouped.push(activity);
+      }
+    });
+
+    return grouped;
+  }, [filteredActivities]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full bg-black">
+        <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
+          Loading activities...
+        </p>
+      </div>
+    );
+  }
+
   const sessionDuration = session.createdAt
     ? Math.floor(
         (new Date().getTime() - new Date(session.createdAt).getTime()) /
@@ -665,56 +698,7 @@ export function ActivityFeed({
                 </div>
               </div>
             )}
-            {(() => {
-              // Filter activities first
-              const filtered = activities.filter((activity) => {
-                const content = activity.content?.trim();
-                if (!content) return false;
-                if (content === "{}") return false;
-                if (content === "[]") return false;
-                if (/^\[[\w,\s]+\]$/.test(content)) return false;
-                try {
-                  const parsed = JSON.parse(content);
-                  if (
-                    typeof parsed === "object" &&
-                    Object.keys(parsed).length === 0
-                  )
-                    return false;
-                  if (Array.isArray(parsed) && parsed.length === 0)
-                    return false;
-                } catch {
-                  // Not JSON, keep it
-                }
-                return true;
-              });
-
-              // Group consecutive progress activities from the same role
-              const grouped: Array<Activity | Activity[]> = [];
-              let currentGroup: Activity[] | null = null;
-
-              filtered.forEach((activity, index) => {
-                const shouldGroup =
-                  activity.type === "progress" && activity.role === "agent";
-                const prevActivity = index > 0 ? filtered[index - 1] : null;
-                const prevShouldGroup =
-                  prevActivity &&
-                  prevActivity.type === "progress" &&
-                  prevActivity.role === "agent";
-
-                if (shouldGroup) {
-                  if (prevShouldGroup && currentGroup) {
-                    currentGroup.push(activity);
-                  } else {
-                    currentGroup = [activity];
-                    grouped.push(currentGroup);
-                  }
-                } else {
-                  currentGroup = null;
-                  grouped.push(activity);
-                }
-              });
-
-              return grouped.map((item, groupIndex) => {
+            {groupedActivities.map((item, groupIndex) => {
                 // Handle grouped progress activities
                 if (Array.isArray(item)) {
                   const firstActivity = item[0];
@@ -911,8 +895,7 @@ export function ActivityFeed({
                     )}
                   </div>
                 );
-              });
-            })()}
+              })}
           </div>
         </ScrollArea>
       </div>
