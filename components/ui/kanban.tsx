@@ -68,16 +68,17 @@ export type KanbanBoardProps = {
   id: string;
   children: ReactNode;
   className?: string;
+  isOverClassName?: string;
 };
 
-export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
+export const KanbanBoard = ({ id, children, className, isOverClassName }: KanbanBoardProps) => {
   const { isOver, setNodeRef } = useDroppable({ id });
 
   return (
     <div
       className={cn(
         "flex size-full min-h-40 flex-col divide-y overflow-hidden rounded-md border bg-secondary text-xs shadow-sm ring-2 transition-all",
-        isOver ? "ring-primary" : "ring-transparent",
+        isOver ? (isOverClassName ?? "ring-primary") : "ring-transparent",
         className,
       )}
       ref={setNodeRef}
@@ -156,11 +157,13 @@ export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> =
   Omit<HTMLAttributes<HTMLDivElement>, "children" | "id"> & {
     children: (item: T) => ReactNode;
     id: string;
+    emptyContent?: ReactNode;
   };
 
 export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
   children,
   className,
+  emptyContent,
   ...props
 }: KanbanCardsProps<T>) => {
   const { data } = useContext(KanbanContext) as KanbanContextProps<T>;
@@ -174,7 +177,11 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
           className={cn("flex flex-grow flex-col gap-2 p-2", className)}
           {...props}
         >
-          {filteredData.map(children)}
+          {filteredData.length > 0 ? (
+            filteredData.map(children)
+          ) : (
+            emptyContent
+          )}
         </div>
       </SortableContext>
       <ScrollBar orientation="vertical" />
