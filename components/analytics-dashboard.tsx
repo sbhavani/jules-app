@@ -53,6 +53,7 @@ export function AnalyticsDashboard() {
   const [sources, setSources] = useState<Source[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingActivities, setLoadingActivities] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [dateRange, setDateRange] = useState("30");
 
@@ -60,6 +61,8 @@ export function AnalyticsDashboard() {
     if (!client) return;
 
     try {
+      setLoadingActivities(true);
+      // 1. Fetch sessions and sources first (fastest)
       const [sessionsData, sourcesData] = await Promise.all([
         client.listSessions(),
         client.listSources(),
@@ -67,7 +70,9 @@ export function AnalyticsDashboard() {
 
       setSessions(sessionsData);
       setSources(sourcesData);
+      setLoading(false); // Render dashboard immediately with session data
 
+      // 2. Fetch activities in background (slower)
       // Fetch activities for the most recent 20 sessions to avoid rate limits
       // Sort sessions by updated date desc
       const sortedSessions = [...sessionsData]
@@ -88,6 +93,7 @@ export function AnalyticsDashboard() {
       console.error("Failed to fetch analytics data:", error);
     } finally {
       setLoading(false);
+      setLoadingActivities(false);
       setRefreshing(false);
     }
   }, [client]);
@@ -543,65 +549,71 @@ export function AnalyticsDashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-3">
-                <ResponsiveContainer width="100%" height={240}>
-                  <BarChart data={stats.activityData}>
-                    <defs>
-                      <linearGradient
-                        id="colorActivity"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor="#a855f7"
-                          stopOpacity={0.3}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#8b5cf6"
-                          stopOpacity={0.1}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      vertical={false}
-                      stroke="var(--border)"
-                      opacity={0.3}
-                    />
-                    <XAxis
-                      dataKey="name"
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      stroke="#888888"
-                    />
-                    <YAxis
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      stroke="#888888"
-                    />
-                    <Tooltip
-                      cursor={{ fill: "transparent" }}
-                      contentStyle={{
-                        backgroundColor: "var(--background)",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                        color: "var(--foreground)",
-                      }}
-                    />
-                    <Bar
-                      dataKey="value"
-                      fill="url(#colorActivity)"
-                      stroke="#8b5cf6"
-                      strokeWidth={1.5}
-                      radius={[6, 6, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+                {loadingActivities && activities.length === 0 ? (
+                  <div className="h-[240px] flex items-center justify-center">
+                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground/50" />
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={240}>
+                    <BarChart data={stats.activityData}>
+                      <defs>
+                        <linearGradient
+                          id="colorActivity"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="5%"
+                            stopColor="#a855f7"
+                            stopOpacity={0.3}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#8b5cf6"
+                            stopOpacity={0.1}
+                          />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        stroke="var(--border)"
+                        opacity={0.3}
+                      />
+                      <XAxis
+                        dataKey="name"
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        stroke="#888888"
+                      />
+                      <YAxis
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        stroke="#888888"
+                      />
+                      <Tooltip
+                        cursor={{ fill: "transparent" }}
+                        contentStyle={{
+                          backgroundColor: "var(--background)",
+                          borderRadius: "8px",
+                          border: "1px solid var(--border)",
+                          color: "var(--foreground)",
+                        }}
+                      />
+                      <Bar
+                        dataKey="value"
+                        fill="url(#colorActivity)"
+                        stroke="#8b5cf6"
+                        strokeWidth={1.5}
+                        radius={[6, 6, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
               </CardContent>
             </Card>
           </BorderGlow>

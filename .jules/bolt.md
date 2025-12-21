@@ -15,3 +15,7 @@
 ## 2025-12-20 - Memory Leak in Terminal Component
 **Learning:** `IntegratedTerminal` added a window "resize" event listener inside an async initialization function but failed to remove it in the cleanup function. This caused a memory leak of the Terminal instance, Socket connection, and FitAddon on every unmount/remount (e.g. toggling terminal).
 **Action:** Ensure all event listeners added, even in async callbacks, are accessible and removed in the `useEffect` cleanup. Use a `cancelled` flag to prevent async setup from running if the component unmounts before setup completes.
+
+## 2025-12-20 - Waterfall Data Fetching in Dashboard
+**Learning:** `AnalyticsDashboard` was waiting for *all* data (sessions + sources + detailed activities) to load before rendering anything. This created a long initial loading state.
+**Action:** Implement progressive rendering. Fetch and render high-level session data immediately, then fetch detailed activity data in the background to populate the remaining charts.
