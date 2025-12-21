@@ -15,3 +15,6 @@
 
 - **Pushing**:
   - Push changes to the remote repository approximately every 5 commits, or after a significant milestone is reached.
+
+- **GitHub CLI**:
+  - The GitHub CLI (`gh`) is always available. Use it for creating pull requests, managing issues, and other GitHub-integrated workflows.
