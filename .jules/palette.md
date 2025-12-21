@@ -44,3 +44,7 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2025-12-21 - [API Key Visibility & Input Accessibility]
+**Learning:** Sensitive inputs like API keys should always include a visibility toggle. This reduces user anxiety and prevents errors during setup by allowing them to verify the pasted content without exposing it permanently. Additionally, icon-only interactive elements or inputs using placeholders as labels (like chat textareas) must have explicit ARIA labels for screen reader compatibility.
+**Action:** Always wrap password/key inputs with a show/hide toggle and ensure all form inputs have associated labels or `aria-label` attributes.

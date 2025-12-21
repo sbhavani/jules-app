@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useJules } from "@/lib/jules/provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -21,6 +22,7 @@ export function ApiKeySetupForm({ onSuccess }: ApiKeySetupFormProps) {
   const { setApiKey } = useJules();
   const [key, setKey] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [showKey, setShowKey] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,15 +44,29 @@ export function ApiKeySetupForm({ onSuccess }: ApiKeySetupFormProps) {
         >
           API Key <span className="text-red-500">*</span>
         </label>
-        <Input
-          id="api-key"
-          type="password"
-          placeholder="Your Jules API key"
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
-          className="w-full bg-black/50 border-white/10"
-          required
-        />
+        <div className="relative">
+          <Input
+            id="api-key"
+            type={showKey ? "text" : "password"}
+            placeholder="Your Jules API key"
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            className="w-full bg-black/50 border-white/10 pr-10"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowKey(!showKey)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+            aria-label={showKey ? "Hide API key" : "Show API key"}
+          >
+            {showKey ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
+        </div>
         <p className="text-[10px] text-muted-foreground font-mono">
           e.g., sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         </p>

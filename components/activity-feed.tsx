@@ -910,6 +910,7 @@ export function ActivityFeed({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Send a message to Jules..."
+              aria-label="Message to Jules"
               className="min-h-[56px] resize-none text-[11px] bg-black border-white/[0.08] text-white placeholder:text-white/30 focus:border-purple-500/50"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
