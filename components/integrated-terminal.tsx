@@ -197,9 +197,9 @@ export function IntegratedTerminal({
     return () => {
       const currentSocket = socketRef.current;
       const currentXterm = xtermRef.current;
+      const currentTerminalElement = terminalRef.current;
 
-      if (resizeObserver && terminalRef.current) {
-        // eslint-disable-line react-hooks/exhaustive-deps
+      if (resizeObserver && currentTerminalElement) {
         resizeObserver.disconnect();
       }
       if (currentSocket) {
