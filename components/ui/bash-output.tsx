@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { CodeBlock } from './code-block';
+import { CodeBlock } from "./code-block";
 
 interface BashOutputProps {
   output: string;

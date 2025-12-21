@@ -50,12 +50,12 @@ npm start
 
 ### Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | `8080` | WebSocket server port |
-| `ALLOWED_ORIGINS` | `true` (all) | CORS allowed origins |
-| `SHELL` | `/bin/bash` | Default shell to spawn |
-| `NODE_ENV` | - | Node environment |
+| Variable          | Default      | Description            |
+| ----------------- | ------------ | ---------------------- |
+| `PORT`            | `8080`       | WebSocket server port  |
+| `ALLOWED_ORIGINS` | `true` (all) | CORS allowed origins   |
+| `SHELL`           | `/bin/bash`  | Default shell to spawn |
+| `NODE_ENV`        | -            | Node environment       |
 
 ## API
 
@@ -64,20 +64,24 @@ npm start
 #### Client → Server
 
 **`terminal.input`**
+
 - Payload: `string` (keystrokes)
 - Description: Send input to shell
 
 **`terminal.resize`**
+
 - Payload: `{ cols: number, rows: number }`
 - Description: Resize terminal dimensions
 
 #### Server → Client
 
 **`terminal.output`**
+
 - Payload: `string` (shell output)
 - Description: Receive output from shell
 
 **`terminal.exit`**
+
 - Payload: `{ exitCode: number, signal?: number }`
 - Description: Shell process exited
 

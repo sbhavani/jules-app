@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Copy, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Copy, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface PlanStep {
   title?: string;
@@ -19,23 +19,42 @@ export function PlanContent({ content }: PlanContentProps) {
 
   const getPlanText = (data: unknown): string => {
     if (Array.isArray(data)) {
-      return data.map((item: PlanStep, index: number) => {
-        const title = item.title ? `${index + 1}. ${item.title}` : `${index + 1}. ${JSON.stringify(item)}`;
-        const desc = item.description ? `
-   ${item.description}` : '';
-        return title + desc;
-      }).join('\n\n');
+      return data
+        .map((item: PlanStep, index: number) => {
+          const title = item.title
+            ? `${index + 1}. ${item.title}`
+            : `${index + 1}. ${JSON.stringify(item)}`;
+          const desc = item.description
+            ? `
+   ${item.description}`
+            : "";
+          return title + desc;
+        })
+        .join("\n\n");
     }
-    
-    if (typeof data === 'object' && data !== null && 'steps' in data && Array.isArray((data as Record<string, unknown>).steps)) {
+
+    if (
+      typeof data === "object" &&
+      data !== null &&
+      "steps" in data &&
+      Array.isArray((data as Record<string, unknown>).steps)
+    ) {
       const planData = data as { description?: string; steps: PlanStep[] };
-      const steps = planData.steps.map((step: PlanStep, index: number) => {
-        const title = step.title ? `Step ${index + 1}: ${step.title}` : `Step ${index + 1}: ${JSON.stringify(step)}`;
-        const desc = step.description ? `
-   ${step.description}` : '';
-        return title + desc;
-      }).join('\n\n');
-      return planData.description ? `${planData.description}\n\n${steps}` : steps;
+      const steps = planData.steps
+        .map((step: PlanStep, index: number) => {
+          const title = step.title
+            ? `Step ${index + 1}: ${step.title}`
+            : `Step ${index + 1}: ${JSON.stringify(step)}`;
+          const desc = step.description
+            ? `
+   ${step.description}`
+            : "";
+          return title + desc;
+        })
+        .join("\n\n");
+      return planData.description
+        ? `${planData.description}\n\n${steps}`
+        : steps;
     }
 
     return JSON.stringify(data, null, 2);
@@ -44,7 +63,7 @@ export function PlanContent({ content }: PlanContentProps) {
   const handleCopy = async () => {
     try {
       let data = content;
-      if (typeof content === 'string') {
+      if (typeof content === "string") {
         try {
           data = JSON.parse(content);
         } catch {
@@ -52,8 +71,8 @@ export function PlanContent({ content }: PlanContentProps) {
         }
       }
 
-      const text = typeof data === 'string' ? data : getPlanText(data);
-      
+      const text = typeof data === "string" ? data : getPlanText(data);
+
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(text);
       } else {
@@ -67,9 +86,9 @@ export function PlanContent({ content }: PlanContentProps) {
         textArea.focus();
         textArea.select();
         try {
-          document.execCommand('copy');
+          document.execCommand("copy");
         } catch (err) {
-          console.error('Fallback: Oops, unable to copy', err);
+          console.error("Fallback: Oops, unable to copy", err);
           throw err;
         }
         document.body.removeChild(textArea);
@@ -78,11 +97,11 @@ export function PlanContent({ content }: PlanContentProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy plan:', err);
+      console.error("Failed to copy plan:", err);
     }
   };
 
-  const parsed = typeof content === 'string' ? JSON.parse(content) : content;
+  const parsed = typeof content === "string" ? JSON.parse(content) : content;
 
   return (
     <div className="relative group">
@@ -93,18 +112,33 @@ export function PlanContent({ content }: PlanContentProps) {
           onClick={handleCopy}
           className="h-6 w-6 bg-zinc-900/80 hover:bg-zinc-800 text-white/60 hover:text-white"
           title="Copy plan details"
+          aria-label={copied ? "Copied!" : "Copy plan details"}
         >
-          {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+          {copied ? (
+            <Check className="h-3 w-3 text-green-500" />
+          ) : (
+            <Copy className="h-3 w-3" />
+          )}
         </Button>
       </div>
-      
+
       {Array.isArray(parsed) && (
         <div className="space-y-2 pr-6">
           {parsed.map((item: PlanStep, index: number) => (
             <div key={index} className="pl-3 border-l-2 border-primary/30">
-              {item.title && <div className="font-medium text-xs">{item.title}</div>}
-              {item.description && <div className="text-muted-foreground text-[11px] mt-0.5 leading-relaxed">{item.description}</div>}
-              {!item.title && !item.description && <div className="text-xs">{typeof item === 'string' ? item : JSON.stringify(item)}</div>}
+              {item.title && (
+                <div className="font-medium text-xs">{item.title}</div>
+              )}
+              {item.description && (
+                <div className="text-muted-foreground text-[11px] mt-0.5 leading-relaxed">
+                  {item.description}
+                </div>
+              )}
+              {!item.title && !item.description && (
+                <div className="text-xs">
+                  {typeof item === "string" ? item : JSON.stringify(item)}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -112,11 +146,21 @@ export function PlanContent({ content }: PlanContentProps) {
 
       {parsed.steps && Array.isArray(parsed.steps) && (
         <div className="space-y-2 pr-6">
-          {parsed.description && <div className="mb-2 text-xs">{parsed.description}</div>}
+          {parsed.description && (
+            <div className="mb-2 text-xs">{parsed.description}</div>
+          )}
           {parsed.steps.map((step: PlanStep, index: number) => (
             <div key={index} className="pl-3 border-l-2 border-primary/30">
-              <div className="font-medium text-xs">Step {index + 1}: {step.title || (typeof step === 'string' ? step : JSON.stringify(step))}</div>
-              {step.description && <div className="text-muted-foreground text-[11px] mt-0.5 leading-relaxed">{step.description}</div>}
+              <div className="font-medium text-xs">
+                Step {index + 1}:{" "}
+                {step.title ||
+                  (typeof step === "string" ? step : JSON.stringify(step))}
+              </div>
+              {step.description && (
+                <div className="text-muted-foreground text-[11px] mt-0.5 leading-relaxed">
+                  {step.description}
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { ThemeProvider as NextThemesProvider, useTheme } from 'next-themes';
-import { Theme } from '@radix-ui/themes';
-import { useEffect, useState } from 'react';
-import type { ComponentProps } from 'react';
+import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
+import { Theme } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
+import type { ComponentProps } from "react";
 
 type ThemeProviderProps = ComponentProps<typeof NextThemesProvider>;
 
@@ -17,7 +17,10 @@ function RadixThemeWrapper({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <Theme accentColor="purple" appearance={mounted ? (resolvedTheme as 'light' | 'dark') : 'dark'}>
+    <Theme
+      accentColor="purple"
+      appearance={mounted ? (resolvedTheme as "light" | "dark") : "dark"}
+    >
       {children}
     </Theme>
   );

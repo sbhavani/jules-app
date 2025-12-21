@@ -3,6 +3,7 @@
 > **GitHub Issues**: All features are tracked as [GitHub Issues](https://github.com/sbhavani/jules-app/issues). Issue numbers are linked throughout this document.
 
 ## Vision
+
 A powerful, self-hosted web application for managing Jules AI agent sessions with advanced developer tooling, including live code diffs, terminal output inspection, session analytics, and automated workflow orchestration.
 
 ## Current Status (v1.0)
@@ -11,6 +12,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
 <summary><strong>✅ Implemented Features</strong> (Click to expand)</summary>
 
 #### Core Functionality (P0)
+
 - **AUTH-001**: API Key Management ([#1](https://github.com/sbhavani/jules-app/issues/1)) ✅ _Closed_
   - ✅ Secure storage in localStorage
   - ✅ Input validation and error handling
@@ -45,6 +47,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
   - ✅ Touch-optimized interactions
 
 #### Enhanced Features (P1)
+
 - **SESSION-004**: Archive Sessions ([#7](https://github.com/sbhavani/jules-app/issues/7)) ✅ _Closed_
   - ✅ Archive completed sessions
   - ✅ Remove from active list (localStorage)
@@ -91,6 +94,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
   - Alert users to interventions needed for stuck agents.
 
 #### AI Orchestration (P2 - Future)
+
 - **ORCH-001**: "The Architect" - Pre-implementation Plan Review ([#28](https://github.com/sbhavani/jules-app/issues/28)) 🟡 _Open_
   - Leverage a high-reasoning model (e.g., Gemini 1.5 Pro) to critique proposed plans.
   - Checks against architectural constraints and best practices before code generation.
@@ -107,6 +111,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
   - Semantic commit message generation.
 
 #### Advanced Features (P2)
+
 - **SESSION-009**: Kanban Board View ([#31](https://github.com/sbhavani/jules-app/issues/31)) 🟡 _Open_
   - Visualize sessions as cards on a board, grouped by status (Active, Paused, Completed).
   - Drag-and-drop interface for managing session lifecycle.
@@ -141,6 +146,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
 ### SHOULD HAVE (P1 - Next Release)
 
 #### Enhanced Features
+
 - **SESSION-005**: Delete Sessions _(Partially implemented via #7)_
   - API endpoint integration for session deletion
   - Confirmation dialog with undo option
@@ -171,13 +177,12 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
 ### COULD HAVE (P2 - Future Enhancements)
 
 #### Developer Tooling
+
 - **DEV-001**: Integrated Local Terminal ([#34](https://github.com/sbhavani/jules-app/issues/34)) ✅ _Closed_
   - Integrate a terminal within the Jules UI that connects to the user's local machine.
   - Allows direct execution of commands in the context of the session's repository.
   - Real-time output, command history, and ability to run custom scripts.
   - Enhances developer workflow by providing immediate access to local development tools.
-
-
 
 - **WORKFLOW-001**: Automated PR/Branch Review _(Partially tracked via #24)_
   - Trigger review workflows post-Jules creation
@@ -205,6 +210,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
   - Test result artifacts (screenshots, videos, logs)
 
 #### Session Management
+
 - **SESSION-006**: Session Templates ([#14](https://github.com/sbhavani/jules-app/issues/14)) ⏳ _Planned_
   - Save common prompts as templates
   - Quick-start sessions from templates
@@ -225,6 +231,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
   - Real-time collaborative sessions
 
 #### UI/UX Improvements
+
 - **UI-004**: Customization Options
   - Theme customization (custom colors)
   - Font size adjustments
@@ -241,6 +248,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
 ### WON'T HAVE (Out of Scope for Now)
 
 #### Explicitly Excluded
+
 - **Native mobile apps** - Web app only (PWA support instead)
 - **Video/audio integration** - Text-based only
 - **Custom AI models** - Jules API only
@@ -253,6 +261,7 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
 ## Technical Architecture
 
 ### Frontend Stack
+
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript 5
 - **Styling**: Tailwind CSS 4
@@ -264,12 +273,14 @@ A powerful, self-hosted web application for managing Jules AI agent sessions wit
 - **Diff Viewer**: Custom implementation
 
 ### API Integration
+
 - **Jules API**: v1alpha
 - **Authentication**: X-Goog-Api-Key header
 - **Base URL**: https://jules.googleapis.com/v1alpha
 - **Proxy**: Next.js API routes for CORS handling
 
 ### Component Architecture
+
 ```
 app/
 ├── layout.tsx           # Root layout with providers
@@ -298,6 +309,7 @@ lib/
 ```
 
 ### Data Flow
+
 1. User authenticates with API key (stored in localStorage)
 2. App proxies requests through `/api/jules` route
 3. Jules API returns sessions and activities
@@ -309,6 +321,7 @@ lib/
 ## User Flows
 
 ### First-Time User
+
 1. Land on app → API key prompt
 2. Enter API key → Store in localStorage
 3. See empty analytics dashboard
@@ -317,12 +330,14 @@ lib/
 6. View activity feed → Send first message
 
 ### Returning User
+
 1. Land on app → Auto-authenticated
 2. See analytics dashboard or last viewed session
 3. Click session → View activities and diffs
 4. Send message or create new session
 
 ### Mobile User
+
 1. Open app on mobile device
 2. Tap menu icon → Session sheet opens
 3. Select session → View activity feed
@@ -331,6 +346,7 @@ lib/
 6. Type message → Send via button
 
 ### Developer Workflow (Future)
+
 1. Jules creates PR → Webhook triggers review workflow
 2. Workflow provisions H100 VM via RunPod
 3. Tests execute with GPU acceleration
@@ -341,6 +357,7 @@ lib/
 ## Future Roadmap
 
 ### Phase 2 - Developer Tooling (Q1 2026)
+
 - **Integrated Terminal**
   - Full xterm.js integration
   - WebSocket communication
@@ -354,6 +371,7 @@ lib/
   - Notification system
 
 ### Phase 3 - Cloud Infrastructure (Q2 2026)
+
 - **RunPod MCP Integration**
   - VM provisioning API
   - GPU selection interface
@@ -367,6 +385,7 @@ lib/
   - Cost optimization recommendations
 
 ### Phase 4 - Collaboration (Q3 2026)
+
 - **Team Features**
   - Multi-user support
   - Session sharing
@@ -380,6 +399,7 @@ lib/
   - Jira integration
 
 ### Phase 5 - Enterprise (Q4 2026)
+
 - **Self-Hosted Option**
   - Docker deployment
   - Kubernetes manifests
@@ -390,12 +410,14 @@ lib/
 ## Dependencies
 
 ### Critical Dependencies
+
 - Jules API availability and stability
 - GitHub app installation for sources
 - Modern browser support (ES6+)
 - Next.js API routes for CORS handling
 
 ### Future Dependencies
+
 - RunPod API (for VM execution)
 - GitHub App (for workflow automation)
 - WebSocket server (for terminal integration)
@@ -404,12 +426,14 @@ lib/
 ## Open Questions
 
 ### Current Questions
+
 1. Should we support multiple API keys (team accounts)?
 2. What's the ideal session refresh interval? (Currently 5s)
 3. Should we implement activity pagination or infinite scroll?
 4. What analytics platform should we integrate?
 
 ### Future Questions
+
 1. Which cloud providers should we support beyond RunPod?
 2. How do we handle long-running test executions (hours)?
 3. Should we cache VM instances or provision on-demand?
@@ -420,6 +444,7 @@ lib/
 ## Appendix
 
 ### API Endpoints Used
+
 - `GET /sources` - List repositories
 - `GET /sessions` - List sessions
 - `POST /sessions` - Create session
@@ -429,6 +454,7 @@ lib/
 - `POST /sessions/:id:approvePlan` - Approve plan
 
 ### Future API Endpoints
+
 - `POST /workflows` - Trigger automated workflow
 - `GET /workflows/:id` - Get workflow status
 - `POST /vms` - Provision VM
@@ -440,40 +466,41 @@ lib/
 
 All features are tracked as GitHub issues. Use this table for quick reference:
 
-| Issue # | Feature ID | Title | Status | Priority |
-|---------|------------|-------|--------|----------|
-| [#1](https://github.com/sbhavani/jules-app/issues/1) | AUTH-001 | API Key Management | ✅ Closed | P0 Critical |
-| [#2](https://github.com/sbhavani/jules-app/issues/2) | SESSION-001 | Session List View | ✅ Closed | P0 Critical |
-| [#3](https://github.obhavani/jules-app/issues/3) | SESSION-002 | Session Detail View | ✅ Closed | P0 Critical |
-| [#4](https://github.com/sbhavani/jules-app/issues/4) | SESSION-003 | Create New Session | ✅ Closed | P0 Critical |
-| [#5](https://github.com/sbhavani/jules-app/issues/5) | ACTIVITY-001 | Send Messages to Session | ✅ Closed | P0 Critical |
-| [#6](https://github.com/sbhavani/jules-app/issues/6) | UI-001 | Mobile-Responsive Layout | ✅ Closed | P0 Critical |
-| [#7](https://github.obhavani/jules-app/issues/7) | SESSION-004 | Delete/Archive Sessions | ✅ Closed | P1 Important |
-| [#8](https://github.com/sbhavani/jules-app/issues/8) | ACTIVITY-002 | Activity Type Indicators | ✅ Closed | P1 Important |
-| [#9](https://github.com/sbhavani/jules-app/issues/9) | SOURCE-001 | Repository Management | ✅ Closed | P1 Important |
-| [#10](https://github.com/sbhavani/jules-app/issues/10) | UI-002 | Dark Mode Support | ✅ Closed | P1 Important |
-| [#11](https://github.obhavani/jules-app/issues/11) | UI-003 | Loading States & Skeleton Loaders | ✅ Closed | P1 Important |
-| [#12](https://github.com/sbhavani/jules-app/issues/12) | SEARCH-001 | Session Search & Filtering | ✅ Closed | P1 Important |
-| [#13](https://github.com/sbhavani/jules-app/issues/13) | NOTIF-001 | Error Notifications & Toast System | 🟡 Open | P1 Important |
-| [#14](https://github.com/sbhavani/jules-app/issues/14) | SESSION-006 | Session Templates | 🟡 Open | P2 Nice to Have |
-| [#15](https://github.com/sbhavani/jules-app/issues/15) | ACTIVITY-003 | Rich Message Formatting | ✅ Closed | P2 Nice to Have |
-| [#16](https://github.com/sbhavani/jules-app/issues/16) | EXPORT-001 | Export Session Data | 🟡 Open | P2 Nice to Have |
-| [#17](https://github.com/sbhavani/jules-app/issues/17) | ANALYTICS-001 | Usage Analytics Dashboard | ✅ Closed | P2 Nice to Have |
-| [#21](https://github.com/sbhavani/jules-app/issues/21) | SESSION-006 | Branch Selection Support | 🟡 Open | Feature |
-| [#22](https://github.com/sbhavani/jules-app/issues/22) | SESSION-007 | Plan Approval Configuration | ✅ Closed | Feature |
-| [#23](https://github.com/sbhavani/jules-app/issues/23) | NOTIF-002 | Native Browser Notifications | 🟡 Open | Feature |
-| [#24](https://github.com/sbhavani/jules-app/issues/24) | SESSION-008 | Post-Session PR Review Workflow | 🟡 Open | Feature |
-| [#28](https://github.com/sbhavani/jules-app/issues/28) | ORCH-001 | "The Architect" Plan Review | 🟡 Open | Feature |
-| [#29](https://github.com/sbhavani/jules-app/issues/29) | ORCH-002 | "The Auditor" Security Analysis | 🟡 Open | Feature |
-| [#30](https://github.com/sbhavani/jules-app/issues/30) | ORCH-003 | "The Librarian" Auto-Docs | 🟡 Open | Feature |
-| [#31](https://github.com/sbhavani/jules-app/issues/31) | SESSION-009 | Kanban Board View | 🟡 Open | Feature |
-| [#32](https://bhub.com/sbhavani/jules-app/issues/32) | ANALYTICS-002 | Code Impact Metrics | 🟡 Open | Feature |
-| [#33](https://github.com/sbhavani/jules-app/issues/33) | ANALYTICS-004 | Session Health Monitoring | 🟡 Open | Feature |
-| [#34](https://github.com/sbhavani/jules-app/issues/34) | DEV-001 | Integrated Local Terminal | ✅ Closed | Feature |
-| N/A | DIFF-001 | Code Diff Viewer | ✅ Closed | None |
-| N/A | TERMINAL-001 | Bash Output Inspector | ✅ Closed | None |
+| Issue #                                                | Feature ID    | Title                              | Status    | Priority        |
+| ------------------------------------------------------ | ------------- | ---------------------------------- | --------- | --------------- |
+| [#1](https://github.com/sbhavani/jules-app/issues/1)   | AUTH-001      | API Key Management                 | ✅ Closed | P0 Critical     |
+| [#2](https://github.com/sbhavani/jules-app/issues/2)   | SESSION-001   | Session List View                  | ✅ Closed | P0 Critical     |
+| [#3](https://github.obhavani/jules-app/issues/3)       | SESSION-002   | Session Detail View                | ✅ Closed | P0 Critical     |
+| [#4](https://github.com/sbhavani/jules-app/issues/4)   | SESSION-003   | Create New Session                 | ✅ Closed | P0 Critical     |
+| [#5](https://github.com/sbhavani/jules-app/issues/5)   | ACTIVITY-001  | Send Messages to Session           | ✅ Closed | P0 Critical     |
+| [#6](https://github.com/sbhavani/jules-app/issues/6)   | UI-001        | Mobile-Responsive Layout           | ✅ Closed | P0 Critical     |
+| [#7](https://github.obhavani/jules-app/issues/7)       | SESSION-004   | Delete/Archive Sessions            | ✅ Closed | P1 Important    |
+| [#8](https://github.com/sbhavani/jules-app/issues/8)   | ACTIVITY-002  | Activity Type Indicators           | ✅ Closed | P1 Important    |
+| [#9](https://github.com/sbhavani/jules-app/issues/9)   | SOURCE-001    | Repository Management              | ✅ Closed | P1 Important    |
+| [#10](https://github.com/sbhavani/jules-app/issues/10) | UI-002        | Dark Mode Support                  | ✅ Closed | P1 Important    |
+| [#11](https://github.obhavani/jules-app/issues/11)     | UI-003        | Loading States & Skeleton Loaders  | ✅ Closed | P1 Important    |
+| [#12](https://github.com/sbhavani/jules-app/issues/12) | SEARCH-001    | Session Search & Filtering         | ✅ Closed | P1 Important    |
+| [#13](https://github.com/sbhavani/jules-app/issues/13) | NOTIF-001     | Error Notifications & Toast System | 🟡 Open   | P1 Important    |
+| [#14](https://github.com/sbhavani/jules-app/issues/14) | SESSION-006   | Session Templates                  | 🟡 Open   | P2 Nice to Have |
+| [#15](https://github.com/sbhavani/jules-app/issues/15) | ACTIVITY-003  | Rich Message Formatting            | ✅ Closed | P2 Nice to Have |
+| [#16](https://github.com/sbhavani/jules-app/issues/16) | EXPORT-001    | Export Session Data                | 🟡 Open   | P2 Nice to Have |
+| [#17](https://github.com/sbhavani/jules-app/issues/17) | ANALYTICS-001 | Usage Analytics Dashboard          | ✅ Closed | P2 Nice to Have |
+| [#21](https://github.com/sbhavani/jules-app/issues/21) | SESSION-006   | Branch Selection Support           | 🟡 Open   | Feature         |
+| [#22](https://github.com/sbhavani/jules-app/issues/22) | SESSION-007   | Plan Approval Configuration        | ✅ Closed | Feature         |
+| [#23](https://github.com/sbhavani/jules-app/issues/23) | NOTIF-002     | Native Browser Notifications       | 🟡 Open   | Feature         |
+| [#24](https://github.com/sbhavani/jules-app/issues/24) | SESSION-008   | Post-Session PR Review Workflow    | 🟡 Open   | Feature         |
+| [#28](https://github.com/sbhavani/jules-app/issues/28) | ORCH-001      | "The Architect" Plan Review        | 🟡 Open   | Feature         |
+| [#29](https://github.com/sbhavani/jules-app/issues/29) | ORCH-002      | "The Auditor" Security Analysis    | 🟡 Open   | Feature         |
+| [#30](https://github.com/sbhavani/jules-app/issues/30) | ORCH-003      | "The Librarian" Auto-Docs          | 🟡 Open   | Feature         |
+| [#31](https://github.com/sbhavani/jules-app/issues/31) | SESSION-009   | Kanban Board View                  | 🟡 Open   | Feature         |
+| [#32](https://bhub.com/sbhavani/jules-app/issues/32)   | ANALYTICS-002 | Code Impact Metrics                | 🟡 Open   | Feature         |
+| [#33](https://github.com/sbhavani/jules-app/issues/33) | ANALYTICS-004 | Session Health Monitoring          | 🟡 Open   | Feature         |
+| [#34](https://github.com/sbhavani/jules-app/issues/34) | DEV-001       | Integrated Local Terminal          | ✅ Closed | Feature         |
+| N/A                                                    | DIFF-001      | Code Diff Viewer                   | ✅ Closed | None            |
+| N/A                                                    | TERMINAL-001  | Bash Output Inspector              | ✅ Closed | None            |
 
 **Summary Statistics:**
+
 - ✅ Closed: 16 issues
 - 🟡 Open: 12 issues
 - P0 Critical: 6 issues (6 closed, 0 open)
@@ -484,16 +511,19 @@ All features are tracked as GitHub issues. Use this table for quick reference:
 ### Technology Evaluations
 
 #### Terminal Integration
+
 - **xterm.js** (Recommended) - Full-featured, widely used
 - **ttyd** - Lightweight, WebSocket-based
 - **gotty** - Simple, Go-based
 
 #### VM Providers
+
 - **RunPod** (Primary) - GPU-focused, cost-effective
 - **Lambda Labs** (Secondary) - H100 availability
 - **Vast.ai** (Tertiary) - Spot pricing
 
 #### Workflow Engine
+
 - **GitHub Actions** (Integration) - Existing ecosystem
 - **Custom** (Recommended) - Full control, Jules-specific
 - **Temporal** (Future) - Durable execution
