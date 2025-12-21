@@ -40,6 +40,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) - the Terminal button will be visible but show setup instructions when clicked.
 
 **To hide the Terminal button completely**, add to `.env.local`:
+
 ```bash
 NEXT_PUBLIC_DISABLE_TERMINAL=true
 ```
@@ -90,18 +91,19 @@ Open [http://localhost:3000](http://localhost:3000) - the Terminal will connect 
 ## 📸 More Screenshots
 
 ![Integrated Terminal](public/assets/jules-terminal.png)
-*Integrated Terminal - Full web-based terminal with real-time command execution and output*
+_Integrated Terminal - Full web-based terminal with real-time command execution and output_
 
 ![Dashboard View](public/assets/dashboard-screenshot.png)
-*Analytics Dashboard - Track session success rates, duration, and activity volume*
+_Analytics Dashboard - Track session success rates, duration, and activity volume_
 
 ## 🛠️ Tech Stack
 
 **Frontend:** [Next.js 16](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/), [xterm.js](https://xtermjs.org/)
 
 **Terminal Server:** [Node.js](https://nodejs.org/), [Socket.io](https://socket.io/), [node-pty](https://github.com/microsoft/node-pty)
-  - **Base Image:** `nvcr.io/nvidia/pytorch:25.11-py3` (Configurable)
-  - **Pre-installed Tools:** `gemini-cli`, `python3`, `git`, `bash`
+
+- **Base Image:** `nvcr.io/nvidia/pytorch:25.11-py3` (Configurable)
+- **Pre-installed Tools:** `gemini-cli`, `python3`, `git`, `bash`
 
 **Infrastructure:** [Docker](https://www.docker.com/), [Docker Compose](https://docs.docker.com/compose/)
 

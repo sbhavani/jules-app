@@ -1,4 +1,4 @@
-declare module '*.css' {
+declare module "*.css" {
   interface IStyle {
     [className: string]: string;
   }

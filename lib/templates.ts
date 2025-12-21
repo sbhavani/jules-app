@@ -1,13 +1,14 @@
-import { SessionTemplate } from '@/types/jules';
+import { SessionTemplate } from "@/types/jules";
 
-const TEMPLATES_KEY = 'jules-session-templates';
+const TEMPLATES_KEY = "jules-session-templates";
 
 const PREBUILT_TEMPLATES: SessionTemplate[] = [
   {
-    id: 'bolt-performance-agent',
-    name: 'Bolt ⚡',
-    title: 'Performance Optimization',
-    description: 'A performance-obsessed agent who makes the codebase faster, one optimization at a time.',
+    id: "bolt-performance-agent",
+    name: "Bolt ⚡",
+    title: "Performance Optimization",
+    description:
+      "A performance-obsessed agent who makes the codebase faster, one optimization at a time.",
     prompt: `You are "Bolt" ⚡ - a performance-obsessed agent who makes the codebase faster, one optimization at a time.
 
 Your mission is to identify and implement ONE small performance improvement that makes the application measurably faster or more efficient.
@@ -160,13 +161,14 @@ Remember: You're Bolt, making things lightning fast. But speed without correctne
 
 If no suitable performance optimization can be identified, stop and do not create a PR.`,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   },
   {
-    id: 'palette-ux-agent',
-    name: 'Palette 🎨',
-    title: 'UX Improvement',
-    description: 'A UX-focused agent who adds small touches of delight and accessibility to the user interface.',
+    id: "palette-ux-agent",
+    name: "Palette 🎨",
+    title: "UX Improvement",
+    description:
+      "A UX-focused agent who adds small touches of delight and accessibility to the user interface.",
     prompt: `You are "Palette" 🎨 - a UX-focused agent who adds small touches of delight and accessibility to the user interface.
 
 Your mission is to find and implement ONE micro-UX improvement that makes the interface more intuitive, accessible, or pleasant to use.
@@ -361,13 +363,14 @@ Remember: You're Palette, painting small strokes of UX excellence. Every pixel m
 
 If no suitable UX enhancement can be identified, stop and do not create a PR.`,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   },
   {
-    id: 'sentinel-security-agent',
-    name: 'Sentinel 🛡️',
-    title: 'Security Auditor',
-    description: 'A security-focused agent who protects the codebase from vulnerabilities and security risks.',
+    id: "sentinel-security-agent",
+    name: "Sentinel 🛡️",
+    title: "Security Auditor",
+    description:
+      "A security-focused agent who protects the codebase from vulnerabilities and security risks.",
     prompt: `You are "Sentinel" 🛡️ - a security-focused agent who protects the codebase from vulnerabilities and security risks.
 
 Your mission is to identify and fix ONE small security issue or add ONE security enhancement that makes the application more secure.
@@ -610,13 +613,14 @@ Remember: You're Sentinel, the guardian of the codebase. Security is not optiona
 
 If no security issues can be identified, perform a security enhancement or stop and do not create a PR.`,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   },
   {
-    id: 'guardian-test-agent',
-    name: 'Guardian 🛡️',
-    title: 'Quality Assurance',
-    description: 'A quality-obsessed agent who makes the codebase bulletproof, one test case at a time.',
+    id: "guardian-test-agent",
+    name: "Guardian 🛡️",
+    title: "Quality Assurance",
+    description:
+      "A quality-obsessed agent who makes the codebase bulletproof, one test case at a time.",
     prompt: `You are "Guardian" 🛡️ - a quality-obsessed agent who makes the codebase bulletproof, one test case at a time.
 Your mission is to identify and implement ONE meaningful test case that increases code coverage and confidence in the system's stability.
 Boundaries
@@ -717,13 +721,14 @@ GUARDIAN AVOIDS (false security):
 ❌ Tests that require a live database connection (unless specified as integration)
 Remember: You're Guardian. You don't just write code; you write insurance. A passing test suite is a peaceful night's sleep. If you can't find a meaningful gap to test today, do not force a trivial test. Stop and do not create a PR.`,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   },
   {
-    id: 'echo-reproduction-agent',
-    name: 'Echo 🔁',
-    title: 'Bug Reproduction',
-    description: 'A forensic PyTorch reproduction agent who mirrors bugs to reveal their root cause.',
+    id: "echo-reproduction-agent",
+    name: "Echo 🔁",
+    title: "Bug Reproduction",
+    description:
+      "A forensic PyTorch reproduction agent who mirrors bugs to reveal their root cause.",
     prompt: `You are "Echo" 🔁 - a forensic PyTorch reproduction agent who mirrors bugs to reveal their root cause.
 Your mission is to turn vague external reports into concrete, reproducible scripts, serving as the bridge between user reports and engineering standards.
 Boundaries
@@ -815,12 +820,12 @@ ECHO AVOIDS (Out of Scope):
 ❌ Debugging "It works on my machine" – if it fails in the container, it's a bug; if it works in the container, it's the user's env.
 Remember: You are Echo. You do not guess; you replicate. If you cannot reproduce the bug in the standard container, you cannot fix it. Verify, Document, Attribute.`,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  }
+    updatedAt: new Date().toISOString(),
+  },
 ];
 
 export function getTemplates(): SessionTemplate[] {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === "undefined") return [];
 
   try {
     const stored = localStorage.getItem(TEMPLATES_KEY);
@@ -828,39 +833,44 @@ export function getTemplates(): SessionTemplate[] {
       // Return prebuilt templates if nothing is stored
       return PREBUILT_TEMPLATES;
     }
-    
+
     // Sort by most recently updated
     const templates: SessionTemplate[] = JSON.parse(stored);
-    return templates.sort((a, b) => 
-      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    return templates.sort(
+      (a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
     );
   } catch (error) {
-    console.error('Failed to parse templates from localStorage:', error);
+    console.error("Failed to parse templates from localStorage:", error);
     // Fallback to prebuilt templates on error
     return PREBUILT_TEMPLATES;
   }
 }
 
-export function saveTemplate(template: Omit<SessionTemplate, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }): SessionTemplate {
-  if (typeof window === 'undefined') {
-    throw new Error('Cannot save template on server side');
+export function saveTemplate(
+  template: Omit<SessionTemplate, "id" | "createdAt" | "updatedAt"> & {
+    id?: string;
+  },
+): SessionTemplate {
+  if (typeof window === "undefined") {
+    throw new Error("Cannot save template on server side");
   }
 
   const templates = getTemplates();
   const now = new Date().toISOString();
-  
+
   let savedTemplate: SessionTemplate;
 
   if (template.id) {
     // Update existing
-    const index = templates.findIndex(t => t.id === template.id);
-    if (index === -1) throw new Error('Template not found');
-    
+    const index = templates.findIndex((t) => t.id === template.id);
+    if (index === -1) throw new Error("Template not found");
+
     savedTemplate = {
       ...templates[index],
       ...template,
       id: template.id, // Ensure ID is preserved
-      updatedAt: now
+      updatedAt: now,
     };
     templates[index] = savedTemplate;
   } else {
@@ -869,7 +879,7 @@ export function saveTemplate(template: Omit<SessionTemplate, 'id' | 'createdAt' 
       ...template,
       id: crypto.randomUUID(),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     };
     templates.push(savedTemplate);
   }
@@ -878,25 +888,25 @@ export function saveTemplate(template: Omit<SessionTemplate, 'id' | 'createdAt' 
     localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
     return savedTemplate;
   } catch (error) {
-    console.error('Failed to save template to localStorage:', error);
+    console.error("Failed to save template to localStorage:", error);
     throw error;
   }
 }
 
 export function deleteTemplate(id: string): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   const templates = getTemplates();
-  const filtered = templates.filter(t => t.id !== id);
-  
+  const filtered = templates.filter((t) => t.id !== id);
+
   try {
     localStorage.setItem(TEMPLATES_KEY, JSON.stringify(filtered));
   } catch (error) {
-    console.error('Failed to delete template from localStorage:', error);
+    console.error("Failed to delete template from localStorage:", error);
   }
 }
 
 export function getTemplate(id: string): SessionTemplate | undefined {
   const templates = getTemplates();
-  return templates.find(t => t.id === id);
+  return templates.find((t) => t.id === id);
 }

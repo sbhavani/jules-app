@@ -37,6 +37,7 @@ docker-compose up
 ```
 
 This will start:
+
 - Jules UI on http://localhost:3000
 - Terminal server on ws://localhost:8080
 
@@ -70,11 +71,13 @@ The integrated terminal will be available in your Jules session UI. It automatic
 ## Technology Stack
 
 ### Frontend
+
 - **@xterm/xterm** - Terminal emulator for the browser
 - **@xterm/addon-fit** - Responsive terminal sizing
 - **socket.io-client** - WebSocket communication
 
 ### Backend
+
 - **node-pty** - Pseudo-terminal for spawning shells
 - **socket.io** - Real-time bidirectional communication
 - **Docker** - Container isolation and security
@@ -108,7 +111,7 @@ echo "Hello from Jules terminal!"
 To use the terminal component in your Jules UI:
 
 ```tsx
-import { IntegratedTerminal } from '@/components/integrated-terminal'
+import { IntegratedTerminal } from "@/components/integrated-terminal";
 
 function SessionView({ session }) {
   return (
@@ -119,23 +122,24 @@ function SessionView({ session }) {
         className="h-full"
       />
     </div>
-  )
+  );
 }
 ```
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `sessionId` | string | required | Unique identifier for the terminal session |
-| `workingDir` | string | `""` | Subdirectory within mounted workspace |
-| `className` | string | `""` | Additional CSS classes |
+| Prop         | Type   | Default  | Description                                |
+| ------------ | ------ | -------- | ------------------------------------------ |
+| `sessionId`  | string | required | Unique identifier for the terminal session |
+| `workingDir` | string | `""`     | Subdirectory within mounted workspace      |
+| `className`  | string | `""`     | Additional CSS classes                     |
 
 ## Configuration
 
 ### Environment Variables
 
 #### Frontend (.env.local)
+
 ```bash
 # WebSocket URL for terminal server (Optional)
 # Defaults to ws://<hostname>:8080
@@ -146,6 +150,7 @@ REPO_PATH=./workspace
 ```
 
 #### Terminal Server (docker-compose.yml)
+
 ```yaml
 environment:
   - NODE_ENV=development
@@ -157,6 +162,7 @@ environment:
 The terminal server uses `nvcr.io/nvidia/pytorch:25.11-py3` by default. To use a different image (e.g., standard Ubuntu or a custom ML image):
 
 1. Set the environment variable:
+
    ```bash
    export TERMINAL_BASE_IMAGE=ubuntu:22.04
    ```
@@ -197,11 +203,13 @@ volumes:
 The terminal implementation includes several security measures:
 
 ### Container Isolation
+
 - Runs in isolated Docker container
 - Separate from Jules UI container
 - No direct host system access
 
 ### Capability Restrictions
+
 ```yaml
 security_opt:
   - no-new-privileges:true
@@ -214,6 +222,7 @@ cap_add:
 ```
 
 ### Best Practices
+
 ✅ Only mount necessary directories
 ✅ Use read-only mounts when possible
 ✅ Don't expose terminal server to public internet
@@ -225,11 +234,13 @@ cap_add:
 ### Terminal Not Connecting
 
 1. **Check if terminal server is running:**
+
    ```bash
    docker-compose ps
    ```
 
 2. **View terminal server logs:**
+
    ```bash
    docker-compose logs terminal-server
    ```
@@ -281,6 +292,7 @@ If the terminal doesn't fit properly:
 For development, you can run services separately:
 
 #### Terminal Server
+
 ```bash
 cd terminal-server
 npm install
@@ -288,6 +300,7 @@ npm start
 ```
 
 #### Jules UI
+
 ```bash
 npm install
 npm run dev
@@ -300,10 +313,12 @@ npm run dev
 The terminal server exposes events via Socket.io:
 
 **Client → Server:**
+
 - `terminal.input` - Send keystrokes to shell
 - `terminal.resize` - Notify terminal size changes
 
 **Server → Client:**
+
 - `terminal.output` - Receive shell output
 - `terminal.exit` - Shell process exited
 
@@ -318,19 +333,19 @@ You can create multiple terminal instances:
 ```tsx
 function MultiTerminal() {
   const [terminals, setTerminals] = useState([
-    { id: '1', sessionId: 'session-1' },
-    { id: '2', sessionId: 'session-2' }
-  ])
+    { id: "1", sessionId: "session-1" },
+    { id: "2", sessionId: "session-2" },
+  ]);
 
   return (
     <Tabs>
-      {terminals.map(term => (
+      {terminals.map((term) => (
         <TabPanel key={term.id}>
           <IntegratedTerminal sessionId={term.sessionId} />
         </TabPanel>
       ))}
     </Tabs>
-  )
+  );
 }
 ```
 
@@ -384,6 +399,7 @@ Ask Jules to analyze the backlog and create a plan.
 **User:** "Look at the backlog. Find the top 3 'Dataset' bugs. For the hardest one, create a reproduction plan and a draft fix."
 
 **Jules:**
+
 1. **Plan:** "Issue #402 (race condition in `indexed_dataset`)."
 2. **Repro Code:** Provides a Python script block.
 3. **Draft Fix:** Suggests a patch for `dataset.py`.
@@ -426,15 +442,16 @@ Run the repro script again.
 python3 repro_402.py
 ```
 
-*   **Pass:** Commit and push.
-*   **Fail:** Pipe the error back to Gemini:
-    ```bash
-    python3 repro_402.py 2>&1 | gemini "The fix didn't work. Here is the error. Fix the code."
-    ```
+- **Pass:** Commit and push.
+- **Fail:** Pipe the error back to Gemini:
+  ```bash
+  python3 repro_402.py 2>&1 | gemini "The fix didn't work. Here is the error. Fix the code."
+  ```
 
 ### Best Practice: Jules-Created Branches
 
 If Jules has GitHub access:
+
 1.  Ask Jules to **create a branch** (e.g., `fix/issue-402`) and **commit the failing test**.
 2.  In your terminal:
     ```bash

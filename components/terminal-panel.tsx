@@ -1,26 +1,26 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useCallback } from 'react'
-import { IntegratedTerminal } from './integrated-terminal'
-import { Button } from './ui/button'
-import { Terminal, X, Minus, Maximize2, Minimize2 } from 'lucide-react'
+import { useState, useEffect, useCallback } from "react";
+import { IntegratedTerminal } from "./integrated-terminal";
+import { Button } from "./ui/button";
+import { Terminal, X, Minus, Maximize2, Minimize2 } from "lucide-react";
 
 interface TerminalPanelProps {
-  sessionId: string
-  repositoryPath?: string
-  isOpen: boolean
-  onToggle: () => void
+  sessionId: string;
+  repositoryPath?: string;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
 export function TerminalPanel({
   sessionId,
-  repositoryPath = '',
+  repositoryPath = "",
   isOpen,
-  onToggle
+  onToggle,
 }: TerminalPanelProps) {
   const [height, setHeight] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedHeight = localStorage.getItem('terminal-panel-height');
+    if (typeof window !== "undefined") {
+      const savedHeight = localStorage.getItem("terminal-panel-height");
       return savedHeight ? parseInt(savedHeight, 10) : 400; // Default to 400 if not found
     }
     return 400; // Default for SSR
@@ -31,71 +31,71 @@ export function TerminalPanel({
   // Save height to localStorage
   useEffect(() => {
     if (height !== 400) {
-      localStorage.setItem('terminal-panel-height', height.toString())
+      localStorage.setItem("terminal-panel-height", height.toString());
     }
-  }, [height])
+  }, [height]);
 
   // Keyboard shortcut: Ctrl/Cmd + `
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === '`') {
-        e.preventDefault()
-        onToggle()
+      if ((e.ctrlKey || e.metaKey) && e.key === "`") {
+        e.preventDefault();
+        onToggle();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onToggle])
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onToggle]);
 
   const startResizing = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    setIsResizing(true)
-  }, [])
+    e.preventDefault();
+    setIsResizing(true);
+  }, []);
 
   const stopResizing = useCallback(() => {
-    setIsResizing(false)
-  }, [])
+    setIsResizing(false);
+  }, []);
 
   const resize = useCallback(
     (e: MouseEvent) => {
       if (isResizing) {
-        const newHeight = window.innerHeight - e.clientY
+        const newHeight = window.innerHeight - e.clientY;
         if (newHeight > 100 && newHeight < window.innerHeight - 100) {
-          setHeight(newHeight)
+          setHeight(newHeight);
         }
       }
     },
-    [isResizing]
-  )
+    [isResizing],
+  );
 
   useEffect(() => {
     if (isResizing) {
-      window.addEventListener('mousemove', resize)
-      window.addEventListener('mouseup', stopResizing)
+      window.addEventListener("mousemove", resize);
+      window.addEventListener("mouseup", stopResizing);
       return () => {
-        window.removeEventListener('mousemove', resize)
-        window.removeEventListener('mouseup', stopResizing)
-      }
+        window.removeEventListener("mousemove", resize);
+        window.removeEventListener("mouseup", stopResizing);
+      };
     }
-  }, [isResizing, resize, stopResizing])
+  }, [isResizing, resize, stopResizing]);
 
   const handleMaximize = () => {
     if (isMaximized) {
-      setHeight(400)
-      setIsMaximized(false)
+      setHeight(400);
+      setIsMaximized(false);
     } else {
-      setHeight(window.innerHeight - 100)
-      setIsMaximized(true)
+      setHeight(window.innerHeight - 100);
+      setIsMaximized(true);
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div
       className="fixed bottom-0 left-0 right-0 bg-zinc-950 border-t border-white/[0.08] z-40 flex flex-col"
-      style={{ height: isMaximized ? 'calc(100vh - 56px)' : height }}
+      style={{ height: isMaximized ? "calc(100vh - 56px)" : height }}
     >
       {/* Resize Handle */}
       <div
@@ -122,6 +122,7 @@ export function TerminalPanel({
             className="h-6 w-6 hover:bg-white/5 text-white/60 hover:text-white/80"
             onClick={() => setHeight(200)}
             title="Minimize"
+            aria-label="Minimize terminal"
           >
             <Minus className="h-3 w-3" />
           </Button>
@@ -130,7 +131,10 @@ export function TerminalPanel({
             size="icon"
             className="h-6 w-6 hover:bg-white/5 text-white/60 hover:text-white/80"
             onClick={handleMaximize}
-            title={isMaximized ? 'Restore' : 'Maximize'}
+            title={isMaximized ? "Restore" : "Maximize"}
+            aria-label={
+              isMaximized ? "Restore terminal size" : "Maximize terminal"
+            }
           >
             {isMaximized ? (
               <Minimize2 className="h-3 w-3" />
@@ -144,6 +148,7 @@ export function TerminalPanel({
             className="h-6 w-6 hover:bg-white/5 text-white/60 hover:text-white/80"
             onClick={onToggle}
             title="Close Terminal (Ctrl+`)"
+            aria-label="Close terminal"
           >
             <X className="h-3 w-3" />
           </Button>
@@ -159,5 +164,5 @@ export function TerminalPanel({
         />
       </div>
     </div>
-  )
+  );
 }

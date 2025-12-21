@@ -28,6 +28,7 @@ See the [PRD](docs/PRD.md) for detailed architecture and feature roadmap.
 ## Reporting Issues
 
 Found a bug or have a feature request? [Open an issue](https://github.com/sbhavani/jules-app/issues) with:
+
 - Clear description of the problem/feature
 - Steps to reproduce (for bugs)
 - Expected vs actual behavior

@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 
 /**
  * Hook to check if terminal feature should be available
@@ -8,11 +8,12 @@ import { useState } from 'react'
  */
 export function useTerminalAvailable() {
   // Check if user has explicitly disabled terminal via env var
-  const isDisabled = typeof window !== 'undefined' &&
-    process.env.NEXT_PUBLIC_DISABLE_TERMINAL === 'true'
+  const isDisabled =
+    typeof window !== "undefined" &&
+    process.env.NEXT_PUBLIC_DISABLE_TERMINAL === "true";
 
-  const [isAvailable] = useState(!isDisabled)
-  const [isChecking] = useState(false)
+  const [isAvailable] = useState(!isDisabled);
+  const [isChecking] = useState(false);
 
-  return { isAvailable, isChecking }
+  return { isAvailable, isChecking };
 }

@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useCallback } from 'react';
-import { useJules } from '@/lib/jules/provider';
-import type { Session } from '@/types/jules';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { useEffect, useState, useCallback } from "react";
+import { useJules } from "@/lib/jules/provider";
+import type { Session } from "@/types/jules";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { CardSpotlight } from '@/components/ui/card-spotlight';
-import { formatDistanceToNow, isValid, parseISO, isToday } from 'date-fns';
-import { getArchivedSessions } from '@/lib/archive';
+} from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { CardSpotlight } from "@/components/ui/card-spotlight";
+import { formatDistanceToNow, isValid, parseISO, isToday } from "date-fns";
+import { getArchivedSessions } from "@/lib/archive";
 
 function truncateText(text: string, maxLength: number) {
-  if (!text) return '';
+  if (!text) return "";
   if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
+  return text.slice(0, maxLength) + "...";
 }
 
 interface SessionListProps {
@@ -29,22 +29,25 @@ interface SessionListProps {
   selectedSessionId?: string;
 }
 
-export function SessionList({ onSelectSession, selectedSessionId }: SessionListProps) {
+export function SessionList({
+  onSelectSession,
+  selectedSessionId,
+}: SessionListProps) {
   const { client } = useJules();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return 'Unknown date';
+    if (!dateString) return "Unknown date";
 
     try {
       const date = parseISO(dateString);
-      if (!isValid(date)) return 'Unknown date';
+      if (!isValid(date)) return "Unknown date";
       return formatDistanceToNow(date, { addSuffix: true });
     } catch {
-      return 'Unknown date';
+      return "Unknown date";
     }
   };
 
@@ -60,12 +63,12 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
       const data = await client.listSessions();
       setSessions(data);
     } catch (err) {
-      console.error('Failed to load sessions:', err);
+      console.error("Failed to load sessions:", err);
       // Provide helpful error messages
       if (err instanceof Error) {
-        if (err.message.includes('Invalid API key')) {
-          setError('Invalid API key. Please check your API key and try again.');
-        } else if (err.message.includes('Resource not found')) {
+        if (err.message.includes("Invalid API key")) {
+          setError("Invalid API key. Please check your API key and try again.");
+        } else if (err.message.includes("Resource not found")) {
           // For 404, just show empty state instead of error
           setSessions([]);
           setError(null);
@@ -73,7 +76,7 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
           setError(err.message);
         }
       } else {
-        setError('Failed to load sessions');
+        setError("Failed to load sessions");
       }
       setSessions([]);
     } finally {
@@ -85,24 +88,24 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
     loadSessions();
   }, [loadSessions]);
 
-  const getStatusColor = (status: Session['status']) => {
+  const getStatusColor = (status: Session["status"]) => {
     switch (status) {
-      case 'active':
-        return 'bg-green-500';
-      case 'completed':
-        return 'bg-blue-500';
-      case 'failed':
-        return 'bg-red-500';
-      case 'paused':
-        return 'bg-yellow-500';
+      case "active":
+        return "bg-green-500";
+      case "completed":
+        return "bg-blue-500";
+      case "failed":
+        return "bg-red-500";
+      case "paused":
+        return "bg-yellow-500";
       default:
-        return 'bg-gray-500';
+        return "bg-gray-500";
     }
   };
 
   const getRepoShortName = (sourceId: string) => {
     // Extract just the repo name from "owner/repo"
-    const parts = sourceId.split('/');
+    const parts = sourceId.split("/");
     return parts[parts.length - 1] || sourceId;
   };
 
@@ -118,7 +121,12 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
     return (
       <div className="flex flex-col items-center justify-center gap-3 p-6">
         <p className="text-xs text-destructive text-center">{error}</p>
-        <Button variant="outline" size="sm" onClick={loadSessions} className="h-7 text-[10px] font-mono uppercase tracking-widest">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={loadSessions}
+          className="h-7 text-[10px] font-mono uppercase tracking-widest"
+        >
           Retry
         </Button>
       </div>
@@ -128,12 +136,12 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
   // Filter out archived sessions and apply search
   const archivedSessions = getArchivedSessions();
   const visibleSessions = sessions
-    .filter(session => !archivedSessions.has(session.id))
-    .filter(session => {
+    .filter((session) => !archivedSessions.has(session.id))
+    .filter((session) => {
       if (!searchQuery) return true;
       const query = searchQuery.toLowerCase();
-      const title = (session.title || '').toLowerCase();
-      const repo = (session.sourceId || '').toLowerCase();
+      const title = (session.title || "").toLowerCase();
+      const repo = (session.sourceId || "").toLowerCase();
       return title.includes(query) || repo.includes(query);
     });
 
@@ -142,10 +150,10 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
       <div className="flex items-center justify-center p-6">
         <p className="text-xs text-muted-foreground text-center leading-relaxed">
           {searchQuery
-            ? 'No sessions match your search.'
+            ? "No sessions match your search."
             : sessions.length === 0
-            ? 'No sessions yet. Create one to get started!'
-            : 'All sessions are archived.'}
+              ? "No sessions yet. Create one to get started!"
+              : "All sessions are archived."}
         </p>
       </div>
     );
@@ -153,7 +161,7 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
 
   const sessionLimit = 100;
   // Calculate usage based on sessions created today, regardless of search/archive status
-  const dailySessionCount = sessions.filter(session => {
+  const dailySessionCount = sessions.filter((session) => {
     if (!session.createdAt) return false;
     try {
       return isToday(parseISO(session.createdAt));
@@ -184,35 +192,41 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
               <CardSpotlight
                 key={session.id}
                 radius={250}
-                color={selectedSessionId === session.id ? '#a855f7' : '#404040'}
+                color={selectedSessionId === session.id ? "#a855f7" : "#404040"}
                 className={`relative ${
-                  selectedSessionId === session.id ? 'border-purple-500/30' : ''
+                  selectedSessionId === session.id ? "border-purple-500/30" : ""
                 }`}
               >
                 <div
                   role="button"
                   tabIndex={0}
-                  aria-label={`Select session ${session.title || 'Untitled'}`}
+                  aria-label={`Select session ${session.title || "Untitled"}`}
                   className="w-full flex items-start gap-2.5 px-3 py-2.5 text-left relative z-10 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-purple-500/50"
                   onClick={() => onSelectSession(session)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
                       onSelectSession(session);
                     }
                   }}
                 >
-                  <div className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full ${getStatusColor(session.status)}`} />
+                  <div
+                    className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full ${getStatusColor(session.status)}`}
+                  />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5 w-full min-w-0">
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div className="text-[10px] font-bold leading-tight text-white uppercase tracking-wide flex-1 min-w-0 block overflow-hidden text-ellipsis whitespace-nowrap">
-                            {truncateText(session.title || 'Untitled', 30)}
+                            {truncateText(session.title || "Untitled", 30)}
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent side="bottom" align="start" className="bg-zinc-900 border-white/10 text-white text-[10px] max-w-[200px] break-words z-[60]">
-                          <p>{session.title || 'Untitled'}</p>
+                        <TooltipContent
+                          side="bottom"
+                          align="start"
+                          className="bg-zinc-900 border-white/10 text-white text-[10px] max-w-[200px] break-words z-[60]"
+                        >
+                          <p>{session.title || "Untitled"}</p>
                         </TooltipContent>
                       </Tooltip>
                       {session.sourceId && (
@@ -249,7 +263,9 @@ export function SessionList({ onSelectSession, selectedSessionId }: SessionListP
           </div>
           {dailySessionCount >= sessionLimit * 0.8 && (
             <p className="text-[8px] text-white/30 mt-1 leading-tight uppercase tracking-wider font-mono">
-              {dailySessionCount >= sessionLimit ? 'LIMIT REACHED' : 'APPROACHING LIMIT'}
+              {dailySessionCount >= sessionLimit
+                ? "LIMIT REACHED"
+                : "APPROACHING LIMIT"}
             </p>
           )}
         </div>

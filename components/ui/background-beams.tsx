@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 export function BackgroundBeams({ className }: { className?: string }) {
   const paths = [
-    'M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875',
-    'M-373 -197C-373 -197 -305 208 159 335C623 462 691 867 691 867',
-    'M-366 -205C-366 -205 -298 200 166 327C630 454 698 859 698 859',
+    "M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875",
+    "M-373 -197C-373 -197 -305 208 159 335C623 462 691 867 691 867",
+    "M-366 -205C-366 -205 -298 200 166 327C630 454 698 859 698 859",
   ];
 
   return (
     <div
       className={cn(
-        'pointer-events-none absolute inset-0 z-0 overflow-hidden',
-        className
+        "pointer-events-none absolute inset-0 z-0 overflow-hidden",
+        className,
       )}
     >
       <svg
@@ -41,7 +41,7 @@ export function BackgroundBeams({ className }: { className?: string }) {
               duration: 8,
               repeat: Infinity,
               delay: index * 2,
-              ease: 'linear',
+              ease: "linear",
             }}
           />
         ))}

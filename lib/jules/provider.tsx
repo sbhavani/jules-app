@@ -1,7 +1,13 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { JulesClient } from './client';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from "react";
+import { JulesClient } from "./client";
 
 interface JulesContextType {
   client: JulesClient | null;
@@ -19,7 +25,7 @@ export function JulesProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem('jules-api-key');
+    const stored = localStorage.getItem("jules-api-key");
     if (stored) {
       // eslint-disable-next-line
       setApiKeyState(stored);
@@ -29,19 +35,21 @@ export function JulesProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setApiKey = (key: string) => {
-    localStorage.setItem('jules-api-key', key);
+    localStorage.setItem("jules-api-key", key);
     setApiKeyState(key);
     setClient(new JulesClient(key));
   };
 
   const clearApiKey = () => {
-    localStorage.removeItem('jules-api-key');
+    localStorage.removeItem("jules-api-key");
     setApiKeyState(null);
     setClient(null);
   };
 
   return (
-    <JulesContext.Provider value={{ client, apiKey, isLoading, setApiKey, clearApiKey }}>
+    <JulesContext.Provider
+      value={{ client, apiKey, isLoading, setApiKey, clearApiKey }}
+    >
       {children}
     </JulesContext.Provider>
   );
@@ -50,7 +58,7 @@ export function JulesProvider({ children }: { children: ReactNode }) {
 export function useJules() {
   const context = useContext(JulesContext);
   if (context === undefined) {
-    throw new Error('useJules must be used within a JulesProvider');
+    throw new Error("useJules must be used within a JulesProvider");
   }
   return context;
 }

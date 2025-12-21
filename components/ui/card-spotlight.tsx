@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useMotionValue, motion, useMotionTemplate } from 'framer-motion';
-import { MouseEvent } from 'react';
-import { cn } from '@/lib/utils';
+import { useMotionValue, motion, useMotionTemplate } from "framer-motion";
+import { MouseEvent } from "react";
+import { cn } from "@/lib/utils";
 
 interface CardSpotlightProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ interface CardSpotlightProps {
 export function CardSpotlight({
   children,
   radius = 350,
-  color = '#262626',
+  color = "#262626",
   className,
 }: CardSpotlightProps) {
   const mouseX = useMotionValue(0);
@@ -29,8 +29,8 @@ export function CardSpotlight({
   return (
     <div
       className={cn(
-        'group relative rounded-none border border-white/[0.08] bg-black',
-        className
+        "group relative rounded-none border border-white/[0.08] bg-black",
+        className,
       )}
       onMouseMove={handleMouseMove}
     >

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface GridBackgroundProps {
   children?: React.ReactNode;
@@ -14,14 +14,14 @@ export function GridBackground({
   fadeIntensity = 20,
 }: GridBackgroundProps) {
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn("relative", className)}>
       {/* Grid pattern */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundSize: `${gridSize}px ${gridSize}px`,
           backgroundImage:
-            'linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px)',
+            "linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px)",
         }}
       />
 
