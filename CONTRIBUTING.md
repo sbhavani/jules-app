@@ -15,11 +15,27 @@ Thanks for your interest in contributing! 🎉
 
 ## Development Guidelines
 
-- Write clear, descriptive commit messages
-- Follow existing code style and patterns
-- Add tests for new features
-- Update documentation as needed
-- Keep PRs focused on a single feature/fix
+- **Atomic PRs**: Keep PRs focused on a single feature or fix.
+- **Issue First**: Every PR should be linked to an existing GitHub Issue.
+- **Tests**: Add tests for new features and bug fixes.
+- **Documentation**: Update the [PRD](docs/PRD.md) if you are implementing a feature or changing architectural assumptions.
+
+### Commit Message Standards
+
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
+- `feat: ...` for new features
+- `fix: ...` for bug fixes
+- `docs: ...` for documentation changes
+- `refactor: ...` for code refactoring
+- `perf: ...` for performance improvements
+
+### Pull Request Standards
+
+To ensure high-quality code and maintain project alignment:
+1. **Title**: Use an action-oriented title (e.g., `feat: implement session health monitoring`).
+2. **Context**: Use the provided template to explain *why* the change is needed.
+3. **Verification**: Explicitly list how the changes were tested.
+4. **Architect's Alignment**: Ensure your changes match the **Acceptance Criteria** defined in the linked issue. If you need to deviate, explain why in the PR description.
 
 ## Project Structure
 
@@ -27,12 +43,20 @@ See the [PRD](docs/PRD.md) for detailed architecture and feature roadmap.
 
 ## Reporting Issues
 
-Found a bug or have a feature request? [Open an issue](https://github.com/sbhavani/jules-app/issues) with:
+Found a bug or have a feature request? [Open an issue](https://github.com/sbhavani/jules-app/issues).
 
-- Clear description of the problem/feature
-- Steps to reproduce (for bugs)
-- Expected vs actual behavior
-- Screenshots if applicable
+### For Feature Requests
+Please use the following format:
+- **User Story**: "As a [role], I want to [action], so that [benefit]."
+- **Description**: Detailed explanation of the feature.
+- **Proposed Acceptance Criteria**: 3-5 checkboxes that define "done".
+
+### For Bugs
+- **Description**: Clear description of the problem.
+- **Steps to Reproduce**: Detailed list of steps.
+- **Environment**: OS, Browser, etc.
+- **Expected vs Actual**: What should have happened vs what did.
+- **Screenshots**: If applicable.
 
 ## Questions?
 
