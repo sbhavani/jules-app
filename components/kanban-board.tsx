@@ -73,8 +73,10 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
   }, [loadSessions]);
 
   const kanbanData = useMemo(() => {
+    const validColumnIds = new Set(COLUMNS.map(col => col.id));
+    
     return sessions
-      .filter((session) => !archivedSessionIds.has(session.id))
+      .filter((session) => !archivedSessionIds.has(session.id) && validColumnIds.has(session.status))
       .map((session) => ({
         id: session.id,
         name: session.title || "Untitled",
@@ -118,7 +120,7 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
 
   if (loading) {
     return (
-      <div className="h-full w-full bg-black flex items-center justify-center">
+      <div className="h-full w-full bg-black flex items-center justify-center" role="status" aria-live="polite">
         <p className="text-sm text-white/50 animate-pulse font-mono uppercase tracking-widest">
           Loading Control Tower...
         </p>
@@ -144,17 +146,18 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
         <div>
           <div className="flex items-center gap-3">
             <h2 className="text-sm font-bold text-white uppercase tracking-widest">Control Tower</h2>
-            <Badge variant="outline" className="h-4 px-1.5 text-[8px] border-amber-500/20 bg-amber-500/5 text-amber-500/60 font-mono uppercase tracking-tighter">
-              Persistence Pending
+            <Badge variant="outline" className="h-4 px-1.5 text-[8px] border-destructive/50 bg-destructive/10 text-destructive font-mono uppercase tracking-tighter animate-pulse">
+              Persistence Disabled
             </Badge>
           </div>
-          <p className="text-[10px] text-white/40 uppercase tracking-wider mt-0.5">Manage session lifecycle (Local changes only)</p>
+          <p className="text-[10px] text-white/40 uppercase tracking-wider mt-0.5">Manage session lifecycle (Status updates are local-only)</p>
         </div>
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={loadSessions} 
           className="h-8 text-[10px] font-mono uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/5 border border-white/10"
+          aria-label="Refresh sessions"
         >
           <RefreshCw className="mr-2 h-3 w-3" />
           Refresh
@@ -181,7 +184,7 @@ export function KanbanBoard({ onSelectSession }: KanbanBoardProps) {
                   <KanbanCard<SessionKanbanItem> 
                     key={item.id} 
                     {...item} 
-                    className="bg-zinc-900 border-white/10 hover:border-white/20 transition-all p-0 overflow-hidden group"
+                    className="bg-zinc-900 border-white/10 hover:border-white/20 focus-visible:ring-1 focus-visible:ring-white/20 transition-all p-0 overflow-hidden group"
                   >
                     <SessionCardContent session={item.session} onSelect={onSelectSession} />
                   </KanbanCard>
@@ -236,7 +239,8 @@ function SessionCardContent({
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-6 px-2 text-[9px] font-mono uppercase tracking-widest text-white/40 group-hover:text-white group-hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-all border border-white/5"
+          className="h-6 px-2 text-[9px] font-mono uppercase tracking-widest text-white/40 group-hover:text-white group-hover:bg-white/10 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all border border-white/5"
+          aria-label={`View session: ${session.title || "Untitled Session"}`}
           onClick={(e) => {
             e.stopPropagation();
             onSelect(session);

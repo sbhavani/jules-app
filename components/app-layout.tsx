@@ -46,9 +46,15 @@ export function AppLayout() {
   const { clearApiKey } = useJules();
   const { isAvailable: terminalAvailable } = useTerminalAvailable();
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-  const [view, setView] = useState<"sessions" | "analytics" | "templates" | "kanban">(
-    "kanban",
-  ); // Set Kanban as default view as it's the "Control Tower"
+  const [view, setView] = useState<"sessions" | "analytics" | "templates" | "kanban">(() => {
+    if (typeof window !== "undefined") {
+      const savedView = localStorage.getItem("jules-current-view");
+      if (savedView && ["sessions", "analytics", "templates", "kanban"].includes(savedView)) {
+        return savedView as "sessions" | "analytics" | "templates" | "kanban";
+      }
+    }
+    return "sessions";
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -64,6 +70,10 @@ export function AppLayout() {
     }
     return false;
   });
+
+  useEffect(() => {
+    localStorage.setItem("jules-current-view", view);
+  }, [view]);
 
   // State for New Session Dialog (Controlled)
   const [isNewSessionOpen, setIsNewSessionOpen] = useState(false);
@@ -194,6 +204,7 @@ export function AppLayout() {
               size="sm"
               className={`h-8 px-3 hover:bg-white/5 ${view === "kanban" ? "text-white" : "text-white/60"}`}
               onClick={() => setView("kanban")}
+              aria-pressed={view === "kanban"}
             >
               <Kanban className="h-3.5 w-3.5 mr-1.5" />
               <span className="text-[10px] font-mono uppercase tracking-wider">
@@ -206,6 +217,7 @@ export function AppLayout() {
               size="sm"
               className={`h-8 px-3 hover:bg-white/5 ${view === "sessions" ? "text-white" : "text-white/60"}`}
               onClick={() => setView("sessions")}
+              aria-pressed={view === "sessions"}
             >
               <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
               <span className="text-[10px] font-mono uppercase tracking-wider">
@@ -218,6 +230,7 @@ export function AppLayout() {
               size="sm"
               className={`h-8 px-3 hover:bg-white/5 ${view === "analytics" ? "text-white" : "text-white/60"}`}
               onClick={() => setView("analytics")}
+              aria-pressed={view === "analytics"}
             >
               <BarChart3 className="h-3.5 w-3.5 mr-1.5" />
               <span className="text-[10px] font-mono uppercase tracking-wider">
