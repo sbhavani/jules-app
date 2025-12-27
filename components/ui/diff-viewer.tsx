@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useId } from "react";
 import {
   Check,
   Copy,
@@ -123,6 +123,7 @@ function FileDiff({
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
     "idle",
   );
+  const contentId = useId();
 
   const handleCopy = async () => {
     const diffText = file.lines.map((line) => line.content).join("\n");
@@ -164,7 +165,10 @@ function FileDiff({
       <div className="flex items-center justify-between px-3 py-2 border-b border-white/[0.08] bg-black/50">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <button
+            type="button"
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-expanded={isExpanded}
+            aria-controls={contentId}
             className="flex items-center gap-2 text-left hover:bg-white/5 rounded px-2 py-1 -ml-2 transition-colors truncate"
           >
             {isExpanded ? (
@@ -221,6 +225,7 @@ function FileDiff({
       <AnimatePresence>
         {isExpanded && (
           <motion.div
+            id={contentId}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
