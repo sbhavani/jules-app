@@ -6,7 +6,7 @@ import type { Session } from "@/types/jules";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -129,8 +129,11 @@ export function SessionList({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-6">
-        <p className="text-xs text-muted-foreground">Loading sessions...</p>
+      <div className="flex flex-col items-center justify-center p-6 gap-3">
+        <Loader2 className="h-5 w-5 animate-spin text-white/20" />
+        <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">
+          Loading sessions...
+        </p>
       </div>
     );
   }
