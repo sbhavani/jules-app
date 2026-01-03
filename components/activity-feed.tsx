@@ -455,7 +455,8 @@ export function ActivityFeed({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full bg-black">
+      <div className="flex flex-col items-center justify-center h-full bg-black gap-3">
+        <Loader2 className="h-5 w-5 animate-spin text-white/20" />
         <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
           Loading activities...
         </p>
