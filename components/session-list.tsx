@@ -6,7 +6,7 @@ import type { Session } from "@/types/jules";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CardSpotlight } from "@/components/ui/card-spotlight";
-import { formatDistanceToNow, isValid, parseISO, isToday } from "date-fns";
+import { formatDistanceToNow, isValid, parseISO, isToday, format } from "date-fns";
 import { getArchivedSessions } from "@/lib/archive";
 
 function truncateText(text: string, maxLength: number) {
@@ -129,8 +129,11 @@ export function SessionList({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-6">
-        <p className="text-xs text-muted-foreground">Loading sessions...</p>
+      <div className="flex items-center justify-center p-6 gap-2">
+        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+          Loading sessions...
+        </p>
       </div>
     );
   }
@@ -244,7 +247,25 @@ export function SessionList({
                       )}
                     </div>
                     <div className="text-[9px] text-white/40 leading-tight font-mono tracking-wide">
-                      {formatDate(session.createdAt)}
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-default hover:text-white/60 transition-colors">
+                            {formatDate(session.createdAt)}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="bottom"
+                          align="start"
+                          className="bg-zinc-900 border-white/10 text-white text-[10px] z-[60]"
+                        >
+                          <p>
+                            {session.createdAt &&
+                            isValid(parseISO(session.createdAt))
+                              ? format(parseISO(session.createdAt), "PPP p")
+                              : "Unknown date"}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 </div>
