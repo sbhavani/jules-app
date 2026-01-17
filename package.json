@@ -61,6 +61,7 @@
     "tunnel-rat": "^0.1.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/jest": "^30.0.0",

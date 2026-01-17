@@ -1,0 +1,55 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - heading "JULES" [level=1] [ref=e7]
+        - generic [ref=e8]:
+          - button "Board" [ref=e9]:
+            - img
+            - generic [ref=e10]: Board
+          - button "Sessions" [pressed] [ref=e11]:
+            - img
+            - generic [ref=e12]: Sessions
+          - button "Analytics" [ref=e13]:
+            - img
+            - generic [ref=e14]: Analytics
+          - button "Toggle Terminal" [ref=e15]:
+            - img
+            - generic [ref=e16]: Terminal
+          - button "New Session" [ref=e17]:
+            - img
+            - text: New Session
+          - button "Settings" [ref=e18]:
+            - img
+    - generic [ref=e19]:
+      - complementary [ref=e20]:
+        - generic [ref=e21]:
+          - heading "SESSIONS" [level=2] [ref=e22]
+          - button "Collapse sidebar" [expanded] [ref=e23]:
+            - img
+        - generic [ref=e25]:
+          - paragraph [ref=e26]: Invalid API key. Please check your API key and try again.
+          - button "Retry" [ref=e27]
+      - main [ref=e28]:
+        - generic [ref=e31]:
+          - heading "NO SESSION" [level=2] [ref=e32]
+          - paragraph [ref=e33]: Select session or create new
+          - button "New Session" [ref=e35]:
+            - img
+            - text: New Session
+  - generic [ref=e40] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e41]:
+      - img [ref=e42]
+    - generic [ref=e45]:
+      - button "Open issues overlay" [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: "0"
+          - generic [ref=e49]: "1"
+        - generic [ref=e50]: Issue
+      - button "Collapse issues badge" [ref=e51]:
+        - img [ref=e52]
+  - alert [ref=e54]
+```
