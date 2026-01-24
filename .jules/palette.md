@@ -44,3 +44,7 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2025-12-22 - Form Input Associations
+**Learning:** Helper text placed below inputs is visually clear but programmatically disconnected for screen readers. Simply adding the text isn't enough.
+**Action:** Always link helper text to its input using `aria-describedby` and a unique ID.

@@ -280,6 +280,7 @@ export function NewSessionDialog({
               </Label>
               <Input
                 id="branch"
+                aria-describedby="branch-helper"
                 placeholder="main"
                 value={formData.startingBranch}
                 onChange={(e) =>
@@ -290,7 +291,7 @@ export function NewSessionDialog({
                 }
                 className="h-9 text-xs"
               />
-              <p className="text-[10px] text-muted-foreground">
+              <p id="branch-helper" className="text-[10px] text-muted-foreground">
                 The branch Jules will start from.
               </p>
             </div>
