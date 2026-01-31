@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CardSpotlight } from "@/components/ui/card-spotlight";
-import { formatDistanceToNow, isValid, parseISO, isToday } from "date-fns";
+import { formatDistanceToNow, isValid, parseISO, isToday, format } from "date-fns";
 import { getArchivedSessions } from "@/lib/archive";
 
 function truncateText(text: string, maxLength: number) {
@@ -243,9 +243,25 @@ export function SessionList({
                         </Badge>
                       )}
                     </div>
-                    <div className="text-[9px] text-white/40 leading-tight font-mono tracking-wide">
-                      {formatDate(session.createdAt)}
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="text-[9px] text-white/40 leading-tight font-mono tracking-wide cursor-help">
+                          {formatDate(session.createdAt)}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="bottom"
+                        align="start"
+                        className="bg-zinc-900 border-white/10 text-white text-[10px] z-[60]"
+                      >
+                        {session.createdAt &&
+                        isValid(parseISO(session.createdAt)) ? (
+                          <p>{format(parseISO(session.createdAt), "PPpp")}</p>
+                        ) : (
+                          <p>Unknown date</p>
+                        )}
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </div>
               </CardSpotlight>
