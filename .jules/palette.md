@@ -44,3 +44,8 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2026-02-07 - Persistent Search Controls
+
+**Learning:** When a search/filter yields no results, hiding the search controls (via early returns or conditional rendering) traps the user in the empty state with no way to reset.
+**Action:** Always render search and filter controls outside the conditional block that displays the results list.

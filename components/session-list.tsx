@@ -6,7 +6,7 @@ import type { Session } from "@/types/jules";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -153,20 +153,6 @@ export function SessionList({
 
 
 
-  if (visibleSessions.length === 0) {
-    return (
-      <div className="flex items-center justify-center p-6">
-        <p className="text-xs text-muted-foreground text-center leading-relaxed">
-          {searchQuery
-            ? "No sessions match your search."
-            : sessions.length === 0
-              ? "No sessions yet. Create one to get started!"
-              : "All sessions are archived."}
-        </p>
-      </div>
-    );
-  }
-
   const sessionLimit = 100;
   // Calculate usage based on sessions created today, regardless of search/archive status
   const dailySessionCount = sessions.filter((session) => {
@@ -183,75 +169,98 @@ export function SessionList({
     <TooltipProvider>
       <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
         <div className="px-3 py-2 border-b border-white/[0.08] shrink-0">
-          <div className="relative">
-            <Search className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
+          <div className="relative group">
+            <Search className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             <Input
               placeholder="Search for repo or sessions"
               aria-label="Search sessions"
-              className="h-7 w-full bg-black/50 pl-7 text-[10px] border-white/10 focus-visible:ring-purple-500/50 placeholder:text-muted-foreground/50"
+              className="h-7 w-full bg-black/50 pl-7 pr-7 text-[10px] border-white/10 focus-visible:ring-purple-500/50 placeholder:text-muted-foreground/50"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-muted-foreground/50 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 rounded-sm transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
           </div>
         </div>
-        <ScrollArea className="flex-1 min-h-0">
-          <div className="p-2 space-y-1">
-            {visibleSessions.map((session) => (
-              <CardSpotlight
-                key={session.id}
-                radius={250}
-                color={selectedSessionId === session.id ? "#a855f7" : "#404040"}
-                className={`relative ${
-                  selectedSessionId === session.id ? "border-purple-500/30" : ""
-                }`}
-              >
-                <div
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Select session ${session.title || "Untitled"}`}
-                  className="w-full flex items-start gap-2.5 px-3 py-2.5 text-left relative z-10 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-purple-500/50"
-                  onClick={() => onSelectSession(session)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      onSelectSession(session);
-                    }
-                  }}
+
+        {visibleSessions.length === 0 ? (
+          <div className="flex items-center justify-center p-6 flex-1">
+            <p className="text-xs text-muted-foreground text-center leading-relaxed">
+              {searchQuery
+                ? "No sessions match your search."
+                : sessions.length === 0
+                  ? "No sessions yet. Create one to get started!"
+                  : "All sessions are archived."}
+            </p>
+          </div>
+        ) : (
+          <ScrollArea className="flex-1 min-h-0">
+            <div className="p-2 space-y-1">
+              {visibleSessions.map((session) => (
+                <CardSpotlight
+                  key={session.id}
+                  radius={250}
+                  color={selectedSessionId === session.id ? "#a855f7" : "#404040"}
+                  className={`relative ${
+                    selectedSessionId === session.id ? "border-purple-500/30" : ""
+                  }`}
                 >
                   <div
-                    className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full ${getStatusColor(session.status)}`}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5 w-full min-w-0">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="text-[10px] font-bold leading-tight text-white uppercase tracking-wide flex-1 min-w-0 block overflow-hidden text-ellipsis whitespace-nowrap">
-                            {truncateText(session.title || "Untitled", 30)}
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent
-                          side="bottom"
-                          align="start"
-                          className="bg-zinc-900 border-white/10 text-white text-[10px] max-w-[200px] break-words z-[60]"
-                        >
-                          <p>{session.title || "Untitled"}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      {session.sourceId && (
-                        <Badge className="shrink-0 text-[9px] px-1.5 py-0 h-4 font-mono bg-white/10 text-white/70 hover:bg-white/20 border-0 rounded-sm uppercase tracking-wider">
-                          {getRepoShortName(session.sourceId)}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="text-[9px] text-white/40 leading-tight font-mono tracking-wide">
-                      {formatDate(session.createdAt)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Select session ${session.title || "Untitled"}`}
+                    className="w-full flex items-start gap-2.5 px-3 py-2.5 text-left relative z-10 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-purple-500/50"
+                    onClick={() => onSelectSession(session)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onSelectSession(session);
+                      }
+                    }}
+                  >
+                    <div
+                      className={`flex-shrink-0 mt-1 w-2 h-2 rounded-full ${getStatusColor(session.status)}`}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5 w-full min-w-0">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="text-[10px] font-bold leading-tight text-white uppercase tracking-wide flex-1 min-w-0 block overflow-hidden text-ellipsis whitespace-nowrap">
+                              {truncateText(session.title || "Untitled", 30)}
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="bottom"
+                            align="start"
+                            className="bg-zinc-900 border-white/10 text-white text-[10px] max-w-[200px] break-words z-[60]"
+                          >
+                            <p>{session.title || "Untitled"}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        {session.sourceId && (
+                          <Badge className="shrink-0 text-[9px] px-1.5 py-0 h-4 font-mono bg-white/10 text-white/70 hover:bg-white/20 border-0 rounded-sm uppercase tracking-wider">
+                            {getRepoShortName(session.sourceId)}
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-[9px] text-white/40 leading-tight font-mono tracking-wide">
+                        {formatDate(session.createdAt)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardSpotlight>
-            ))}
-          </div>
-        </ScrollArea>
+                </CardSpotlight>
+              ))}
+            </div>
+          </ScrollArea>
+        )}
 
         {/* Session Limit Indicator */}
         <div className="border-t border-white/[0.08] px-3 py-2.5 bg-black/50 shrink-0">
