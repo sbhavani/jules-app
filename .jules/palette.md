@@ -44,3 +44,19 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2025-12-21 - [Visual Consistency in Kanban]
+**Learning:** Visual cues like status colors and icons shouldn't just be in list views. Bringing status-colored dots and consistent typography to Kanban cards and column headers creates a unified "system" feeling. Also, using dynamic drag-over highlights that match the column's status reinforces the user's action and the data's destination.
+**Action:** Synchronize status colors across all views (Lists, Kanban, Dashboards) and use them for interactive feedback (drag-over highlights).
+
+## 2025-12-21 - [Kanban Empty States & Filter Context]
+**Learning:** Kanban columns without an explicit empty state can look broken or "unfinished" to users. Additionally, providing counts within filter dropdowns (e.g., repository counts) offers valuable context before the user even makes a selection, reducing trial-and-error filtering.
+**Action:** Implement dashed-border empty states for list/grid containers and include counts in data-dense filters.
+
+## 2025-12-21 - [Search Reset Accessibility]
+**Learning:** Search inputs without a clear button force users to perform multiple backspace actions, which is a friction point, especially on mobile or for long queries. Providing a one-click reset improves the fluidity of list filtering.
+**Action:** Add a clear (X) button to all primary search inputs.
+
+## 2025-12-21 - [API Key Visibility & Input Accessibility]
+**Learning:** Sensitive inputs like API keys should always include a visibility toggle. This reduces user anxiety and prevents errors during setup by allowing them to verify the pasted content without exposing it permanently. Additionally, icon-only interactive elements or inputs using placeholders as labels (like chat textareas) must have explicit ARIA labels for screen reader compatibility.
+**Action:** Always wrap password/key inputs with a show/hide toggle and ensure all form inputs have associated labels or `aria-label` attributes.
