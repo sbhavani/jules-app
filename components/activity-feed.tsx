@@ -9,7 +9,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { formatDistanceToNow, isValid, parseISO } from "date-fns";
+import { format, formatDistanceToNow, isValid, parseISO } from "date-fns";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Send,
   Archive,
@@ -69,6 +75,17 @@ export function ActivityFeed({
       const date = parseISO(dateString);
       if (!isValid(date)) return "Unknown date";
       return formatDistanceToNow(date, { addSuffix: true });
+    } catch {
+      return "Unknown date";
+    }
+  };
+
+  const formatExactDate = (dateString: string) => {
+    if (!dateString) return "Unknown date";
+    try {
+      const date = parseISO(dateString);
+      if (!isValid(date)) return "Unknown date";
+      return format(date, "PPpp");
     } catch {
       return "Unknown date";
     }
@@ -512,8 +529,9 @@ export function ActivityFeed({
   const statusInfo = getStatusInfo();
 
   return (
-    <div className="flex flex-col h-full bg-black">
-      <div className="border-b border-white/[0.08] bg-zinc-950/95 px-4 py-3">
+    <TooltipProvider>
+      <div className="flex flex-col h-full bg-black">
+        <div className="border-b border-white/[0.08] bg-zinc-950/95 px-4 py-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5">
@@ -528,7 +546,17 @@ export function ActivityFeed({
               </div>
             </div>
             <div className="flex items-center gap-3 text-[9px] font-mono text-white/40 uppercase tracking-wide">
-              <span>Started {formatDate(session.createdAt)}</span>
+              <span>
+                Started{" "}
+                <Tooltip>
+                  <TooltipTrigger className="cursor-help hover:text-white/60 transition-colors">
+                    {formatDate(session.createdAt)}
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{formatExactDate(session.createdAt)}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </span>
               <span>•</span>
               <div className="flex items-center gap-1 text-white/60">
                 <Book className="h-3 w-3" />
@@ -554,7 +582,14 @@ export function ActivityFeed({
                   </div>
                   {latestActivity && (
                     <div className="text-[8px] font-mono text-white/30 tracking-wide">
-                      {formatDate(latestActivity.createdAt)}
+                      <Tooltip>
+                        <TooltipTrigger className="cursor-help hover:text-white/50 transition-colors">
+                          {formatDate(latestActivity.createdAt)}
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{formatExactDate(latestActivity.createdAt)}</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   )}
                 </div>
@@ -735,7 +770,14 @@ export function ActivityFeed({
                                   }
                                 >
                                   <div className="text-[8px] font-mono text-white/30 mb-1 uppercase tracking-wide">
-                                    {formatDate(activity.createdAt)}
+                                    <Tooltip>
+                                      <TooltipTrigger className="cursor-help hover:text-white/50 transition-colors">
+                                        {formatDate(activity.createdAt)}
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>{formatExactDate(activity.createdAt)}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
                                   </div>
                                   <div className="text-[11px] leading-relaxed text-white/90 break-words">
                                     {formatContent(activity.content)}
@@ -808,7 +850,14 @@ export function ActivityFeed({
                               {activity.type}
                             </Badge>
                             <span className="text-[9px] font-mono text-white/40 tracking-wide">
-                              {formatDate(activity.createdAt)}
+                              <Tooltip>
+                                <TooltipTrigger className="cursor-help hover:text-white/60 transition-colors">
+                                  {formatDate(activity.createdAt)}
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{formatExactDate(activity.createdAt)}</p>
+                                </TooltipContent>
+                              </Tooltip>
                             </span>
                           </div>
                           <div className="text-[11px] leading-relaxed text-white/90 break-words">
@@ -831,7 +880,14 @@ export function ActivityFeed({
                                 {activity.type}
                               </Badge>
                               <span className="text-[9px] font-mono text-white/40 tracking-wide">
-                                {formatDate(activity.createdAt)}
+                                <Tooltip>
+                                  <TooltipTrigger className="cursor-help hover:text-white/60 transition-colors">
+                                    {formatDate(activity.createdAt)}
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>{formatExactDate(activity.createdAt)}</p>
+                                  </TooltipContent>
+                                </Tooltip>
                               </span>
                             </div>
                             <div className="text-[11px] leading-relaxed text-white/90 break-words">
@@ -942,6 +998,7 @@ export function ActivityFeed({
           </p>
         </div>
       )}
-    </div>
+      </div>
+    </TooltipProvider>
   );
 }

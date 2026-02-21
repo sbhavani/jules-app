@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CardSpotlight } from "@/components/ui/card-spotlight";
-import { formatDistanceToNow, isValid, parseISO, isToday } from "date-fns";
+import { format, formatDistanceToNow, isValid, parseISO, isToday } from "date-fns";
 import { getArchivedSessions } from "@/lib/archive";
 
 function truncateText(text: string, maxLength: number) {
@@ -51,6 +51,17 @@ export function SessionList({
       const date = parseISO(dateString);
       if (!isValid(date)) return "Unknown date";
       return formatDistanceToNow(date, { addSuffix: true });
+    } catch {
+      return "Unknown date";
+    }
+  };
+
+  const formatExactDate = (dateString: string) => {
+    if (!dateString) return "Unknown date";
+    try {
+      const date = parseISO(dateString);
+      if (!isValid(date)) return "Unknown date";
+      return format(date, "PPpp");
     } catch {
       return "Unknown date";
     }
@@ -244,7 +255,14 @@ export function SessionList({
                       )}
                     </div>
                     <div className="text-[9px] text-white/40 leading-tight font-mono tracking-wide">
-                      {formatDate(session.createdAt)}
+                      <Tooltip>
+                        <TooltipTrigger className="cursor-help hover:text-white/60 transition-colors">
+                          {formatDate(session.createdAt)}
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{formatExactDate(session.createdAt)}</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 </div>
