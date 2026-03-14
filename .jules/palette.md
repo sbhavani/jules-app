@@ -44,3 +44,8 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2026-03-14 - Accessible Search Input Interactions
+
+**Learning:** Input fields meant for searching or filtering can be tedious to empty manually. Providing a clear ('X') button when text is present reduces friction significantly. Additionally, decorative icons placed over inputs must be strictly non-interactive to avoid absorbing user clicks.
+**Action:** Always implement a clear button for search inputs, ensuring decorative icons use `pointer-events-none` and interactive buttons have proper `aria-label` attributes for screen readers.
