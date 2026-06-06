@@ -44,3 +44,8 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2025-12-21 - Search Empty State Trap
+
+**Learning:** Empty states for filtered lists should never completely hide the filtering controls (e.g., search input), as this traps the user in the empty state without a way to clear their query.
+**Action:** When a search yields no results, keep the search bar visible so users can easily edit or clear the query. Include an accessible "clear" button inside the input for quick resets.
