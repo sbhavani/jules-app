@@ -44,3 +44,8 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2025-12-22 - Search Input Friction
+
+**Learning:** Search inputs without an explicit "clear" mechanism require users to manually select and delete text, creating unnecessary interaction friction, especially on mobile devices.
+**Action:** Always include a clear button (typically an 'X' icon) within search inputs that appears when the input contains text.
