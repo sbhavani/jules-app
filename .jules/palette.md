@@ -44,3 +44,8 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2025-12-21 - Clearable Search Inputs and Pointer Events
+
+**Learning:** Search inputs often contain decorative icons (like a magnifying glass) overlaid on the input field. If these icons lack `pointer-events-none`, they block clicks, causing frustration. Additionally, users need a quick way to clear active search queries without repeatedly pressing backspace.
+**Action:** Always add `pointer-events-none` to decorative icons overlaid on inputs. Add a clear button ('X') that appears only when the search input has content.
