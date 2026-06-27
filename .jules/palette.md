@@ -44,3 +44,8 @@
 
 **Learning:** While relative dates (e.g., "2 days ago") are cleaner for scanning, users often need the precision of exact timestamps. Tooltips provide the perfect mechanism for this "progressive disclosure"—keeping the interface clean while making detailed data available on demand.
 **Action:** Use relative time for display and exact timestamp in tooltips.
+
+## 2025-12-25 - Clearable Inputs for Filters
+
+**Learning:** When users apply text filters (like search), the absence of a quick "clear" button requires manual backspacing, which is tedious, especially on mobile. Empty states are also easier to recover from when a clear button is prominent.
+**Action:** Always include an accessible "clear" button (with `aria-label="Clear search"`) inside search inputs that appears when text is entered. Ensure the input padding accommodates the absolute-positioned button.
